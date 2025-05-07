@@ -1,0 +1,207 @@
+/* Container utama */
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar h2 {
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar button {
+    background-color: #34495e;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 5px 0;
+    text-align: left;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.sidebar button:hover {
+    background-color: #1abc9c;
+}
+
+.logout-button {
+    background-color: #e74c3c;
+    margin-top: 20px;
+}
+
+.logout-button:hover {
+    background-color: #c0392b;
+}
+
+/* Main content */
+.main-content {
+    
+    flex: 1;
+    padding: 20px;
+    background-color: #ecf0f1;
+}
+
+.main-content h1 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.section-title {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    color: #34495e;
+}
+
+/* Form styles */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-grid input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.btn-add {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-add:hover {
+    background-color: #218838;
+}
+
+.btn-edit {
+    background-color: #007bff;
+    color: white;
+    margin-right: 5px;
+}
+
+.btn-edit:hover {
+    background-color: #0056b3;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+/* Table styles */
+/* Styles for the activities table */
+.table-responsive {
+    margin-top: 20px;
+    overflow-x: auto;
+  }
+  
+  .alumni-table {
+    width: 100%; /* Full width */
+    border-collapse: collapse; /* Merge borders */
+  }
+  
+  .alumni-table th,
+  .alumni-table td {
+    padding: 12px; /* Space around text */
+    text-align: left; /* Align text to the left */
+    border: 1px solid #ddd; /* Light border */
+  }
+  
+  .alumni-table th {
+    background-color: #4CAF50; /* Green background for header */
+    color: white; /* White text for header */
+  }
+  
+  .alumni-table tr:nth-child(even) {
+    background-color: #f2f2f2; /* Light background for even rows */
+  }
+  
+  .alumni-table tr:hover {
+    background-color: #ddd; /* Highlight row on hover */
+  }
+  
+  .btn {
+    padding: 8px 12px; /* Button padding */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+  }
+  
+  .btn-add {
+    background-color: #28a745; /* Green background for add button */
+    color: white; /* White text */
+  }
+  
+  .btn-edit {
+    background-color: #007bff; /* Blue background for edit button */
+    color: white; /* White text */
+  }
+  
+  .btn-delete {
+    background-color: #dc3545; /* Red background for delete button */
+    color: white; /* White text */
+  }
+  
+  /* Modal styles */
+  .modal {
+    position: fixed; /* Fixed position */
+    top: 0; /* Top of the page */
+    left: 0; /* Left side of the page */
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex; /* Flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+  }
+  
+  .modal-content {
+    background-color: white; /* White background for modal */
+    padding: 20px; /* Padding inside modal */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+  }
+  
+  .modal-buttons {
+    display: flex; /* Flexbox for buttons */
+    justify-content: space-between; /* Space out buttons */
+  }
+  

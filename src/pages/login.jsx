@@ -2,12 +2,14 @@ import { useState } from "react";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
-import "/Users/mrnpal/development/admin-busfa/src/login.css"; 
+import { useNavigate } from "react-router-dom"; // ✅ tambahkan ini
+import "../login.css"; 
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate(); // ✅ inisialisasi navigasi
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,6 +25,8 @@ const Login = () => {
       if (!userData || userData.role !== "admin") {
         await signOut(auth);
         setError("Akses ditolak. Anda bukan admin.");
+      } else {
+        navigate("/dashboard"); // ✅ arahkan ke halaman dashboard
       }
 
     } catch (err) {

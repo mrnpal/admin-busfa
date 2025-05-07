@@ -1,28 +1,27 @@
-// src/App.jsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./pages/login";
 import Dashboard from "./pages/dashboard";
-import { auth } from "./firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+import AlumniPage from "./pages/alumniPage";
+import KegiatanPage from "./pages/kegiatanPage";
+import Login from "./pages/login"; // Pastikan nama komponen diawali huruf kapital
 
 function App() {
-  const [user, loading] = useAuthState(auth);
-
-  if (loading) {
-    return <p className="text-center mt-10">Memuat...</p>;
-  }
-
   return (
     <Router>
       <Routes>
-        <Route
-          path="/"
-          element={user ? <Navigate to="/dashboard" /> : <Login />}
-        />
-        <Route
-          path="/dashboard"
-          element={user ? <Dashboard /> : <Navigate to="/" />}
-        />
+        {/* Halaman login sebagai root */}
+        <Route path="/" element={<Login />} />
+
+        {/* Halaman utama dashboard ringkasan */}
+        <Route path="/dashboard" element={<Dashboard />} />
+
+        {/* Halaman kelola alumni */}
+        <Route path="/alumni" element={<AlumniPage />} />
+
+        {/* Halaman kelola kegiatan */}
+        <Route path="/kegiatan" element={<KegiatanPage />} />
+
+        {/* Redirect semua rute yang tidak dikenal ke login */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );
