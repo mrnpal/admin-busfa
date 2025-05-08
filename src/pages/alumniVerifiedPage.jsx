@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs, setDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import { collection, getDocs, updateDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
+
 import "../alumniPage.css";
 
 const AlumniPage = () => {
   const [alumni, setAlumni] = useState([]);
-  const [newAlumni, setNewAlumni] = useState({
-    name: "", email: "", address: "", phone: "", job: "", graduationYear: ""
-  });
+ 
+  
   const [editingAlumni, setEditingAlumni] = useState(null);
   const [deletingAlumni, setDeletingAlumni] = useState(null);
   const [error, setError] = useState(null);
@@ -21,29 +20,15 @@ const AlumniPage = () => {
 
   const fetchAlumni = async () => {
     try {
-      const alumniSnapshot = await getDocs(collection(db, "alumni"));
-      const alumniVerifiedSnapshot = await getDocs(collection(db, "alumniVerified"));
-
-      const alumniData = alumniSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      const alumniVerifiedData = alumniVerifiedSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-      setAlumni([...alumniData, ...alumniVerifiedData]);
+      const snapshot = await getDocs(collection(db, "alumniVerified"));
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setAlumni(data);
     } catch (err) {
       setError("Gagal memuat data alumni.");
     }
   };
 
-  const handleAddAlumni = async (e) => {
-    e.preventDefault();
-    try {
-      const id = uuidv4(); // generate unique ID
-      await setDoc(doc(db, "alumni", id), newAlumni); // gunakan ID eksplisit
-      setNewAlumni({ name: "", email: "", address: "", phone: "", job: "", graduationYear: "" });
-      fetchAlumni();
-    } catch (err) {
-      setError("Gagal menambahkan alumni.");
-    }
-  };
+  
 
   const handleUpdateAlumni = async (e) => {
     e.preventDefault();
@@ -59,7 +44,6 @@ const AlumniPage = () => {
 
   const confirmDelete = async () => {
     try {
-     
       await deleteDoc(doc(db, "alumni", deletingAlumni.id));
       setDeletingAlumni(null);
       fetchAlumni();
@@ -91,26 +75,8 @@ const AlumniPage = () => {
       <div className="main-content">
         {error && <p className="error-message">{error}</p>}
 
-        <h1>Kelola Alumni</h1>
+        <h1>Daftar Alumni Terverifikasi</h1>
 
-        <h2 className="section-title">Tambah Alumni</h2>
-        <form onSubmit={handleAddAlumni} className="form-grid">
-          {["name", "email", "address", "phone", "job", "graduationYear"].map((field) => (
-            <input
-              key={field}
-              type={field === "graduationYear" ? "number" : "text"}
-              placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-              value={newAlumni[field]}
-              onChange={(e) => setNewAlumni((prev) => ({ ...prev, [field]: e.target.value }))}
-              required
-              aria-label={field}
-              className="form-input"
-            />
-          ))}
-          <button type="submit" className="btn btn-add">Tambah</button>
-        </form>
-
-        <h2 className="section-title">Daftar Alumni</h2>
         <table className="alumni-table">
           <thead>
             <tr>

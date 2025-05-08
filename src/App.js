@@ -2,7 +2,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Dashboard from "./pages/dashboard";
 import AlumniPage from "./pages/alumniPage";
 import KegiatanPage from "./pages/kegiatanPage";
-import Login from "./pages/login"; // Pastikan nama komponen diawali huruf kapital
+import Login from "./pages/login"; 
+import VerifyAlumniPage from"./pages/verifikasiAlumni";
+import AlumniVerifiedPage from "./pages/alumniVerifiedPage";
 
 function App() {
   return (
@@ -19,6 +21,10 @@ function App() {
 
         {/* Halaman kelola kegiatan */}
         <Route path="/kegiatan" element={<KegiatanPage />} />
+
+        <Route path="/verifikasi" element={<VerifyAlumniPage />} />
+
+        <Route path="/alumniVerified" element={<AlumniVerifiedPage />} />
 
         {/* Redirect semua rute yang tidak dikenal ke login */}
         <Route path="*" element={<Navigate to="/" replace />} />

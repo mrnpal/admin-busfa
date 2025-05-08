@@ -74,14 +74,16 @@ const KegiatanPage = () => {
       {/* Sidebar */}
       <div className="sidebar">
         <div>
-          <h2>Kelola Kegiatan</h2>
+          <h2>Admin Panel</h2>
           <ul>
-            <button onClick={() => navigate("/dashboard")}>Dashboard</button>
+          <button onClick={() => navigate("/dashboard")}>Dashboard</button>
             <button onClick={() => navigate("/alumni")}>Alumni</button>
             <button onClick={() => navigate("/kegiatan")}>Kegiatan</button>
+            <button onClick={() => navigate("/verifikasi")}>Verifikasi Alumni</button>
+            <button onClick={() => navigate("/alumniVerified")}>Alumni Terverifikasi</button>
           </ul>
         </div>
-        
+        <button className="logout-button" onClick={() => navigate("/logout")}>Logout</button>
       </div>
 
       {/* Main Content */}
