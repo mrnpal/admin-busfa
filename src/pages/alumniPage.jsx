@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs, setDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -12,6 +19,8 @@ const AlumniPage = () => {
   });
   const [editingAlumni, setEditingAlumni] = useState(null);
   const [deletingAlumni, setDeletingAlumni] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -23,54 +32,88 @@ const AlumniPage = () => {
     try {
       const alumniSnapshot = await getDocs(collection(db, "alumni"));
       const alumniVerifiedSnapshot = await getDocs(collection(db, "alumniVerified"));
-
-      const alumniData = alumniSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      const alumniVerifiedData = alumniVerifiedSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
+  
+      const alumniData = alumniSnapshot.docs.map(doc => ({
+        id: doc.id,
+        collectionName: "alumni",
+        verified: false, // Belum terverifikasi
+        ...doc.data()
+      }));
+  
+      const alumniVerifiedData = alumniVerifiedSnapshot.docs.map(doc => ({
+        id: doc.id,
+        collectionName: "alumniVerified",
+        verified: true, // Sudah terverifikasi
+        ...doc.data()
+      }));
+  
       setAlumni([...alumniData, ...alumniVerifiedData]);
     } catch (err) {
       setError("Gagal memuat data alumni.");
     }
   };
+  
+  
 
   const handleAddAlumni = async (e) => {
     e.preventDefault();
     try {
-      const id = uuidv4(); // generate unique ID
-      await setDoc(doc(db, "alumni", id), newAlumni); // gunakan ID eksplisit
+      const id = uuidv4();
+      await setDoc(doc(db, "alumni", id), {
+        ...newAlumni,
+        id: id, // simpan juga ID di dalam dokumen
+        // collectionName: "alumni",
+        // isVerified: false // default belum diverifikasi
+      });
+      
       setNewAlumni({ name: "", email: "", address: "", phone: "", job: "", graduationYear: "" });
       fetchAlumni();
     } catch (err) {
       setError("Gagal menambahkan alumni.");
     }
   };
+  
 
   const handleUpdateAlumni = async (e) => {
     e.preventDefault();
     try {
-      const { id, ...data } = editingAlumni;
-      await updateDoc(doc(db, "alumni", id), data);
+      const { id, collectionName, ...data } = editingAlumni;
+      await updateDoc(doc(db, collectionName, id), {
+        ...data,
+        id,
+        collectionName
+      });
+      
       setEditingAlumni(null);
       fetchAlumni();
     } catch (err) {
       setError("Gagal memperbarui data alumni.");
     }
   };
+  
 
   const confirmDelete = async () => {
     try {
-     
-      await deleteDoc(doc(db, "alumni", deletingAlumni.id));
+      const { id, collectionName } = deletingAlumni;
+      if (!id || !collectionName) {
+        throw new Error("Data tidak lengkap untuk penghapusan.");
+      }
+      await deleteDoc(doc(db, collectionName, id));
       setDeletingAlumni(null);
       fetchAlumni();
     } catch (err) {
+      console.error("Gagal menghapus alumni:", err);
       setError("Gagal menghapus alumni.");
     }
   };
+  
 
   const handleEditChange = (e) => {
     setEditingAlumni((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+  const filteredAlumni = alumni.filter((a) =>
+    `${a.name} ${a.email} ${a.job}`.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="dashboard-container">
@@ -109,6 +152,15 @@ const AlumniPage = () => {
           ))}
           <button type="submit" className="btn btn-add">Tambah</button>
         </form>
+        <input
+          type="text"
+          placeholder="Cari alumni berdasarkan nama, email, atau pekerjaan..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="form-input"
+          style={{ marginBottom: "1rem", width: "100%" }}
+        />
+
 
         <h2 className="section-title">Daftar Alumni</h2>
         <table className="alumni-table">
@@ -121,12 +173,13 @@ const AlumniPage = () => {
               <th>Telepon</th>
               <th>Pekerjaan</th>
               <th>Lulus</th>
+              <th>Status</th>
               <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {alumni.map((a, index) => (
-              <tr key={a.id}>
+            {filteredAlumni.map((a, index) => (
+              <tr key={`${a.collectionName}-${a.id}`}>
                 <td>{index + 1}</td>
                 <td>{a.name}</td>
                 <td>{a.email}</td>
@@ -134,6 +187,14 @@ const AlumniPage = () => {
                 <td>{a.phone}</td>
                 <td>{a.job}</td>
                 <td>{a.graduationYear}</td>
+                <td>
+                  {a.verified ? (
+                    <span title="Terverifikasi" style={{ color: "green", fontWeight: "bold" }}>✔️</span>
+                  ) : (
+                    <span title="Belum Terverifikasi" style={{ color: "red", fontWeight: "bold" }}>❌</span>
+                  )}
+                </td>
+
                 <td>
                   <button className="btn btn-edit" onClick={() => setEditingAlumni(a)}>Edit</button>
                   <button className="btn btn-delete" onClick={() => setDeletingAlumni(a)}>Hapus</button>
