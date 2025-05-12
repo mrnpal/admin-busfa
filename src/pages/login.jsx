@@ -9,7 +9,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // ✅ inisialisasi navigasi
+  const navigate = useNavigate(); 
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -36,6 +36,7 @@ const Login = () => {
   };
 
   return (
+    
     <div className="login-container">
       <form onSubmit={handleLogin} className="login-form">
         <h2 className="login-title">Login Admin</h2>
