@@ -32,10 +32,10 @@ exports.sendVerificationEmail = functions.firestore
       to: email,
       subject: "Pendaftaran Anda Diterima",
       html: `
-        <p>Halo ${name},</p>
-        <p>Pendaftaran anda sebagai alumni telah <strong>diterima</strong>.</p>
+        <p>Halo ${name} 👋,</p>
+        <p>Pendaftaran anda sebagai alumni telah <strong>DITERIMA</strong> 🥳.</p>
         <p>Silahkan masuk menggunakan akun yang telah didaftarkan.</p>
-        <p>Terima kasih.</p>
+        <p>Terima kasih 🫶.</p>
       `,
     };
 

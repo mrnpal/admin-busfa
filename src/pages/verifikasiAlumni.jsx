@@ -38,7 +38,7 @@ const VerifikasiAlumniPage = () => {
       });
 
       // Hapus dari koleksi 'pendingAlumni'
-      await deleteDoc(doc(db, "pendingAlumni", alumni.id));
+      // await deleteDoc(doc(db, "pendingAlumni", alumni.id));
 
       // Refresh daftar pending
       fetchPendingAlumni();

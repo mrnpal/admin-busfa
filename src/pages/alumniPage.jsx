@@ -21,7 +21,7 @@ const AlumniPage = () => {
   const [deletingAlumni, setDeletingAlumni] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Batas baris per halaman
+  const itemsPerPage = 5; 
 
   const [error, setError] = useState(null);
   const navigate = useNavigate();
