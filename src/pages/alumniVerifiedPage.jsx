@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
-
 import "../alumniPage.css";
 
 const AlumniPage = () => {
   const [alumni, setAlumni] = useState([]);
- 
-  
-  const [editingAlumni, setEditingAlumni] = useState(null);
-  const [deletingAlumni, setDeletingAlumni] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // 10 baris per halaman
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -23,38 +20,20 @@ const AlumniPage = () => {
       const snapshot = await getDocs(collection(db, "alumniVerified"));
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setAlumni(data);
+      setCurrentPage(1); // Reset ke halaman 1 saat data berubah
     } catch (err) {
       setError("Gagal memuat data alumni.");
     }
   };
 
-  
+  // Hitung data yang ditampilkan di halaman saat ini
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentAlumni = alumni.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(alumni.length / itemsPerPage);
 
-  const handleUpdateAlumni = async (e) => {
-    e.preventDefault();
-    try {
-      const { id, ...data } = editingAlumni;
-      await updateDoc(doc(db, "alumni", id), data);
-      setEditingAlumni(null);
-      fetchAlumni();
-    } catch (err) {
-      setError("Gagal memperbarui data alumni.");
-    }
-  };
-
-  const confirmDelete = async () => {
-    try {
-      await deleteDoc(doc(db, "alumni", deletingAlumni.id));
-      setDeletingAlumni(null);
-      fetchAlumni();
-    } catch (err) {
-      setError("Gagal menghapus alumni.");
-    }
-  };
-
-  const handleEditChange = (e) => {
-    setEditingAlumni((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  // Fungsi untuk mengubah halaman
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="dashboard-container">
@@ -87,65 +66,51 @@ const AlumniPage = () => {
               <th>Telepon</th>
               <th>Pekerjaan</th>
               <th>Lulus</th>
-              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {alumni.map((a, index) => (
+            {currentAlumni.map((a, index) => (
               <tr key={a.id}>
-                <td>{index + 1}</td>
+                <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                 <td>{a.name}</td>
                 <td>{a.email}</td>
                 <td>{a.address}</td>
                 <td>{a.phone}</td>
                 <td>{a.job}</td>
                 <td>{a.graduationYear}</td>
-                <td>
-                  <button className="btn btn-edit" onClick={() => setEditingAlumni(a)}>Edit</button>
-                  <button className="btn btn-delete" onClick={() => setDeletingAlumni(a)}>Hapus</button>
-                </td>
               </tr>
             ))}
           </tbody>
         </table>
 
-        {/* Modal Edit */}
-        {editingAlumni && (
-          <div className="modal">
-            <div className="modal-content">
-              <h2>Edit Alumni</h2>
-              <form onSubmit={handleUpdateAlumni} className="modal-form">
-                {["name", "email", "address", "phone", "job", "graduationYear"].map((field) => (
-                  <input
-                    key={field}
-                    name={field}
-                    type={field === "graduationYear" ? "number" : "text"}
-                    value={editingAlumni[field]}
-                    onChange={handleEditChange}
-                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-                    required
-                  />
-                ))}
-                <div className="modal-buttons">
-                  <button type="submit" className="btn btn-add">Simpan</button>
-                  <button type="button" className="btn btn-delete" onClick={() => setEditingAlumni(null)}>Batal</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {/* Modal Hapus */}
-        {deletingAlumni && (
-          <div className="modal">
-            <div className="modal-content">
-              <h3>Hapus Alumni?</h3>
-              <p><strong>{deletingAlumni.name}</strong></p>
-              <div className="modal-buttons">
-                <button className="btn btn-delete" onClick={confirmDelete}>Ya</button>
-                <button className="btn btn-edit" onClick={() => setDeletingAlumni(null)}>Tidak</button>
-              </div>
-            </div>
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="pagination">
+            <button 
+              onClick={() => paginate(currentPage - 1)} 
+              disabled={currentPage === 1}
+              className="pagination-button"
+            >
+              &lt; Prev
+            </button>
+            
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
+              <button
+                key={number}
+                onClick={() => paginate(number)}
+                className={`pagination-button ${currentPage === number ? 'active' : ''}`}
+              >
+                {number}
+              </button>
+            ))}
+            
+            <button 
+              onClick={() => paginate(currentPage + 1)} 
+              disabled={currentPage === totalPages}
+              className="pagination-button"
+            >
+              Next &gt;
+            </button>
           </div>
         )}
       </div>

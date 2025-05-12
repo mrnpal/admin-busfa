@@ -20,6 +20,8 @@ const AlumniPage = () => {
   const [editingAlumni, setEditingAlumni] = useState(null);
   const [deletingAlumni, setDeletingAlumni] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Batas baris per halaman
 
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -36,24 +38,40 @@ const AlumniPage = () => {
       const alumniData = alumniSnapshot.docs.map(doc => ({
         id: doc.id,
         collectionName: "alumni",
-        verified: false, // Belum terverifikasi
+        verified: false,
         ...doc.data()
       }));
   
       const alumniVerifiedData = alumniVerifiedSnapshot.docs.map(doc => ({
         id: doc.id,
         collectionName: "alumniVerified",
-        verified: true, // Sudah terverifikasi
+        verified: true,
         ...doc.data()
       }));
   
       setAlumni([...alumniData, ...alumniVerifiedData]);
+      setCurrentPage(1); // Reset ke halaman 1 saat data berubah
     } catch (err) {
       setError("Gagal memuat data alumni.");
     }
   };
   
-  
+  // Fungsi untuk mendapatkan data yang ditampilkan di halaman saat ini
+  const getCurrentPageData = () => {
+    const filteredData = alumni.filter((a) =>
+      `${a.name} ${a.email} ${a.job}`.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return {
+      data: filteredData.slice(startIndex, endIndex),
+      totalItems: filteredData.length,
+      totalPages: Math.ceil(filteredData.length / itemsPerPage)
+    };
+  };
+
+  const { data: currentAlumni, totalPages } = getCurrentPageData();
 
   const handleAddAlumni = async (e) => {
     e.preventDefault();
@@ -61,9 +79,7 @@ const AlumniPage = () => {
       const id = uuidv4();
       await setDoc(doc(db, "alumni", id), {
         ...newAlumni,
-        id: id, // simpan juga ID di dalam dokumen
-        // collectionName: "alumni",
-        // isVerified: false // default belum diverifikasi
+        id: id,
       });
       
       setNewAlumni({ name: "", email: "", address: "", phone: "", job: "", graduationYear: "" });
@@ -72,7 +88,6 @@ const AlumniPage = () => {
       setError("Gagal menambahkan alumni.");
     }
   };
-  
 
   const handleUpdateAlumni = async (e) => {
     e.preventDefault();
@@ -90,7 +105,6 @@ const AlumniPage = () => {
       setError("Gagal memperbarui data alumni.");
     }
   };
-  
 
   const confirmDelete = async () => {
     try {
@@ -106,14 +120,15 @@ const AlumniPage = () => {
       setError("Gagal menghapus alumni.");
     }
   };
-  
 
   const handleEditChange = (e) => {
     setEditingAlumni((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-  const filteredAlumni = alumni.filter((a) =>
-    `${a.name} ${a.email} ${a.job}`.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+
+  // Fungsi untuk mengubah halaman
+  const goToPage = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div className="dashboard-container">
@@ -134,7 +149,6 @@ const AlumniPage = () => {
       <div className="main-content">
         {error && <p className="error-message">{error}</p>}
 
-        <h1>Kelola Alumni</h1>
 
         <h2 className="section-title">Tambah Alumni</h2>
         <form onSubmit={handleAddAlumni} className="form-grid">
@@ -156,11 +170,13 @@ const AlumniPage = () => {
           type="text"
           placeholder="Cari alumni berdasarkan nama, email, atau pekerjaan..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1); // Reset ke halaman 1 saat pencarian berubah
+          }}
           className="form-input"
           style={{ marginBottom: "1rem", width: "100%" }}
         />
-
 
         <h2 className="section-title">Daftar Alumni</h2>
         <table className="alumni-table">
@@ -178,9 +194,9 @@ const AlumniPage = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredAlumni.map((a, index) => (
+            {currentAlumni.map((a, index) => (
               <tr key={`${a.collectionName}-${a.id}`}>
-                <td>{index + 1}</td>
+                <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                 <td>{a.name}</td>
                 <td>{a.email}</td>
                 <td>{a.address}</td>
@@ -194,7 +210,6 @@ const AlumniPage = () => {
                     <span title="Belum Terverifikasi" style={{ color: "red", fontWeight: "bold" }}>❌</span>
                   )}
                 </td>
-
                 <td>
                   <button className="btn btn-edit" onClick={() => setEditingAlumni(a)}>Edit</button>
                   <button className="btn btn-delete" onClick={() => setDeletingAlumni(a)}>Hapus</button>
@@ -203,6 +218,37 @@ const AlumniPage = () => {
             ))}
           </tbody>
         </table>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="pagination">
+            <button 
+              onClick={() => goToPage(currentPage - 1)} 
+              disabled={currentPage === 1}
+              className="pagination-button"
+            >
+              &lt;
+            </button>
+            
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+              <button
+                key={page}
+                onClick={() => goToPage(page)}
+                className={`pagination-button ${currentPage === page ? 'active' : ''}`}
+              >
+                {page}
+              </button>
+            ))}
+            
+            <button 
+              onClick={() => goToPage(currentPage + 1)} 
+              disabled={currentPage === totalPages}
+              className="pagination-button"
+            >
+              &gt;
+            </button>
+          </div>
+        )}
 
         {/* Modal Edit */}
         {editingAlumni && (
