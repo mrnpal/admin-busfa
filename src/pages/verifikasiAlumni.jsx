@@ -43,15 +43,7 @@ const VerifikasiAlumniPage = () => {
       deleteDoc(doc(db, "pendingAlumni", alumni.id)),
     ]);
 
-    // Kirim notifikasi jika alumni memiliki FCM token
-    if (alumni.fcmToken) {
-      await sendFCM(
-        alumni.fcmToken,
-        "Pendaftaran Disetujui",
-        "Selamat! Akun Anda telah diverifikasi."
-      );
-    }
-
+    
     fetchPendingAlumni(); // refresh daftar
   } catch (error) {
     console.error("Gagal memverifikasi alumni:", error);
@@ -70,26 +62,9 @@ const VerifikasiAlumniPage = () => {
     }
   };
 
-  const sendFCM = async (token, title, body) => {
-  const response = await fetch("https://fcm.googleapis.com/fcm/send", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "key=YOUR_SERVER_KEY", // Ganti dengan server key dari Firebase console
-    },
-    body: JSON.stringify({
-      to: token,
-      notification: {
-        title: title,
-        body: body,
-      },
-    }),
-  });
+  
 
-  const data = await response.json();
-  console.log("FCM response:", data);
-};
-
+  
 
   return (
     <div className="dashboard-container">

@@ -44,7 +44,7 @@ const KegiatanPage = () => {
       imageUrl,
     });
   
-    setNewActivity({ title: "", description: "", date: "" });
+    setNewActivity({ title: "", description: "", date: "", time: "", location: "" });
     imageInputRef.current.value = null;
     setImageFile(null);
     fetchActivities();
@@ -107,10 +107,23 @@ const KegiatanPage = () => {
             onChange={(e) => setNewActivity({ ...newActivity, description: e.target.value })}
             required
           />
+            <input
+              type="text"
+              placeholder="Lokasi"
+              value={newActivity.location}
+              onChange={(e) => setNewActivity({ ...newActivity, location: e.target.value })}
+              required
+            />
           <input
             type="date"
             value={newActivity.date}
             onChange={(e) => setNewActivity({ ...newActivity, date: e.target.value })}
+            required
+          />
+          <input
+            type="time"
+            value={newActivity.time}
+            onChange={(e) => setNewActivity({ ...newActivity, time: e.target.value })}
             required
           />
           <input
@@ -134,6 +147,8 @@ const KegiatanPage = () => {
                 <th>Judul</th>
                 <th>Deskripsi</th>
                 <th>Tanggal</th>
+                <th>Waktu</th>
+                <th>Lokasi</th>
                 <th>Gambar</th>
                 <th>Aksi</th>
               </tr>
@@ -145,6 +160,8 @@ const KegiatanPage = () => {
                   <td>{act.title}</td>
                   <td>{act.description}</td>
                   <td>{act.date}</td>
+                  <td>{act.time}</td>
+                  <td>{act.location}</td>
                   <td>
                     {act.imageUrl && (
                       <img
@@ -188,6 +205,20 @@ const KegiatanPage = () => {
                   name="date"
                   type="date"
                   value={editingActivity.date}
+                  onChange={handleEditChange}
+                  required
+                />
+                <input
+                  name="time"
+                  type="time"
+                  value={editingActivity.time}
+                  onChange={handleEditChange}
+                  required
+                />
+                <input
+                  name="location"
+                  type="text"
+                  value={editingActivity.location}
                   onChange={handleEditChange}
                   required
                 />

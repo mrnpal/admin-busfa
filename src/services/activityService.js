@@ -32,12 +32,14 @@ export const addActivity = async (activity) => {
     description: activity.description,
     date: activity.date,
     imageUrl,
+    location: activity.location,
+    time: activity.time,
   });
 };
 
 export const updateActivity = async (activity) => {
-  const { id, title, description, date } = activity;
-  await updateDoc(doc(db, "kegiatan", id), { title, description, date });
+  const { id, title, description, date, location, time } = activity;
+  await updateDoc(doc(db, "kegiatan", id), { title, description, date, location, time });
 };
 
 export const deleteActivity = async (id) => {
