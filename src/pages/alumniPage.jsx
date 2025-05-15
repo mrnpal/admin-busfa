@@ -183,6 +183,7 @@ const AlumniPage = () => {
           <thead>
             <tr>
               <th>No</th>
+              <th>Foto</th>
               <th>Nama</th>
               <th>Email</th>
               <th>Alamat</th>
@@ -197,6 +198,29 @@ const AlumniPage = () => {
             {currentAlumni.map((a, index) => (
               <tr key={`${a.collectionName}-${a.id}`}>
                 <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                <td>
+                  {a.photoUrl ? (
+                    <img
+                      src={a.photoUrl}
+                      alt={a.name}
+                      style={{ width: "48px", height: "48px", borderRadius: "50%", objectFit: "cover" }}
+                    />
+                  ) : (
+                    <div style={{
+                      width: "48px",
+                      height: "48px",
+                      borderRadius: "50%",
+                      background: "#eee",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#aaa",
+                      fontSize: "1.5rem"
+                    }}>
+                      <span>?</span>
+                    </div>
+                  )}
+                </td>
                 <td>{a.name}</td>
                 <td>{a.email}</td>
                 <td>{a.address}</td>

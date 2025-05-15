@@ -5,7 +5,7 @@ import {
   getDocs,
   setDoc,
   deleteDoc,
-  doc
+  doc,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import "../verifikasiAlumni.css";
@@ -22,7 +22,7 @@ const VerifikasiAlumniPage = () => {
   const fetchPendingAlumni = async () => {
     const snapshot = await getDocs(collection(db, "pendingAlumni"));
     const data = snapshot.docs.map((doc) => ({
-      id: doc.id, // UID pengguna disimpan di sini
+      id: doc.id, 
       ...doc.data(),
     }));
     setPendingAlumni(data);
@@ -31,16 +31,15 @@ const VerifikasiAlumniPage = () => {
   const handleVerify = async (alumni) => {
     setLoading(true);
     try {
-      // Simpan data alumni ke koleksi 'alumni' dengan UID sebagai ID dokumen
+      // Simpan ke alumniVerified dengan UID sebagai ID dokumen
       await setDoc(doc(db, "alumniVerified", alumni.id), {
         ...alumni,
         isVerified: true,
       });
 
-      // Hapus dari koleksi 'pendingAlumni'
-      // await deleteDoc(doc(db, "pendingAlumni", alumni.id));
+      // Hapus dari pendingAlumni
+      await deleteDoc(doc(db, "pendingAlumni", alumni.id));
 
-      // Refresh daftar pending
       fetchPendingAlumni();
     } catch (error) {
       console.error("Gagal memverifikasi alumni:", error);

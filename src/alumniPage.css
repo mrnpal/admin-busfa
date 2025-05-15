@@ -151,6 +151,13 @@
   background-color: #f5f5f5;
 }
 
+.alumni-table img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 /* Pagination Styles */
 .pagination {
   display: flex;
