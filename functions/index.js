@@ -4,7 +4,7 @@ const nodemailer = require("nodemailer");
 
 admin.initializeApp();
 
-// Use Firebase config or environment variables
+// Konfigurasi Gmail
 const gmailEmail = functions.config().gmail?.email || process.env.GMAIL_EMAIL;
 const gmailAppPassword = functions.config().gmail?.password || process.env.GMAIL_PASSWORD;
 
@@ -20,13 +20,16 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Fungsi gabungan: kirim email + notifikasi FCM
 exports.sendVerificationEmail = functions.firestore
   .document("alumniVerified/{userId}")
   .onCreate(async (snap, context) => {
     const data = snap.data();
     const email = data.email;
     const name = data.name;
+    const fcmToken = data.fcmToken; // Ambil FCM token dari data Firestore
 
+    // Email
     const mailOptions = {
       from: `"Admin Busfa" <${gmailEmail}>`,
       to: email,
@@ -42,13 +45,29 @@ exports.sendVerificationEmail = functions.firestore
     try {
       await transporter.sendMail(mailOptions);
       console.log("Email terkirim ke", email);
-      return null;
     } catch (error) {
       console.error("Gagal mengirim email:", error);
-      throw new functions.https.HttpsError(
-        "internal",
-        "Gagal mengirim email verifikasi",
-        error
-      );
     }
+
+    // Notifikasi FCM
+    if (fcmToken) {
+      const payload = {
+        notification: {
+          title: "Pendaftaran Anda Disetujui",
+          body: `Halo ${name}, akun Anda telah diverifikasi oleh admin.`,
+        },
+      };
+
+      try {
+        const response = await admin.messaging().sendToDevice(fcmToken, payload);
+        console.log("Notifikasi dikirim ke:", fcmToken);
+        return response;
+      } catch (error) {
+        console.error("Gagal mengirim notifikasi FCM:", error);
+      }
+    } else {
+      console.log("FCM token tidak ditemukan untuk:", context.params.userId);
+    }
+
+    return null;
   });

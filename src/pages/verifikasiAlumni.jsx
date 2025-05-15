@@ -29,24 +29,37 @@ const VerifikasiAlumniPage = () => {
   };
 
   const handleVerify = async (alumni) => {
-    setLoading(true);
-    try {
-      // Simpan ke alumniVerified dengan UID sebagai ID dokumen
-      await setDoc(doc(db, "alumniVerified", alumni.id), {
-        ...alumni,
-        isVerified: true,
-      });
+  setLoading(true);
+  try {
+    // Simpan ke koleksi alumniVerified dan alumni
+    const alumniData = {
+      ...alumni,
+      isVerified: true,
+    };
 
-      // Hapus dari pendingAlumni
-      await deleteDoc(doc(db, "pendingAlumni", alumni.id));
+    await Promise.all([
+      setDoc(doc(db, "alumniVerified", alumni.id), alumniData),
+      setDoc(doc(db, "alumni", alumni.id), alumniData),
+      deleteDoc(doc(db, "pendingAlumni", alumni.id)),
+    ]);
 
-      fetchPendingAlumni();
-    } catch (error) {
-      console.error("Gagal memverifikasi alumni:", error);
-    } finally {
-      setLoading(false);
+    // Kirim notifikasi jika alumni memiliki FCM token
+    if (alumni.fcmToken) {
+      await sendFCM(
+        alumni.fcmToken,
+        "Pendaftaran Disetujui",
+        "Selamat! Akun Anda telah diverifikasi."
+      );
     }
-  };
+
+    fetchPendingAlumni(); // refresh daftar
+  } catch (error) {
+    console.error("Gagal memverifikasi alumni:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleReject = async (alumniId) => {
     try {
@@ -56,6 +69,27 @@ const VerifikasiAlumniPage = () => {
       console.error("Gagal menolak alumni:", error);
     }
   };
+
+  const sendFCM = async (token, title, body) => {
+  const response = await fetch("https://fcm.googleapis.com/fcm/send", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "key=YOUR_SERVER_KEY", // Ganti dengan server key dari Firebase console
+    },
+    body: JSON.stringify({
+      to: token,
+      notification: {
+        title: title,
+        body: body,
+      },
+    }),
+  });
+
+  const data = await response.json();
+  console.log("FCM response:", data);
+};
+
 
   return (
     <div className="dashboard-container">
