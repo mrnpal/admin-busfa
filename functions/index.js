@@ -20,16 +20,16 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Fungsi gabungan: kirim email + notifikasi FCM
+// Fungsi kirim email verifikasi
 exports.sendVerificationEmail = functions.firestore
   .document("alumniVerified/{userId}")
   .onCreate(async (snap, context) => {
     const data = snap.data();
     const email = data.email;
     const name = data.name;
-    const fcmToken = data.fcmToken; // Ambil FCM token dari data Firestore
+    
 
-    // Email
+    // Email notifikasi
     const mailOptions = {
       from: `"Admin Busfa" <${gmailEmail}>`,
       to: email,
@@ -48,26 +48,4 @@ exports.sendVerificationEmail = functions.firestore
     } catch (error) {
       console.error("Gagal mengirim email:", error);
     }
-
-    // Notifikasi FCM
-    if (fcmToken) {
-      const payload = {
-        notification: {
-          title: "Pendaftaran Anda Disetujui",
-          body: `Halo ${name}, akun Anda telah diverifikasi oleh admin.`,
-        },
-      };
-
-      try {
-        const response = await admin.messaging().sendToDevice(fcmToken, payload);
-        console.log("Notifikasi dikirim ke:", fcmToken);
-        return response;
-      } catch (error) {
-        console.error("Gagal mengirim notifikasi FCM:", error);
-      }
-    } else {
-      console.log("FCM token tidak ditemukan untuk:", context.params.userId);
-    }
-
-    return null;
   });

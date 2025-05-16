@@ -1,4 +1,3 @@
-// /services/alumniService.js
 import { db } from "../firebase";
 import {
   collection,

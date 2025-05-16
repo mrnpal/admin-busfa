@@ -6,6 +6,7 @@ import Login from "./pages/login";
 import VerifyAlumniPage from"./pages/verifikasiAlumni";
 import AlumniVerifiedPage from "./pages/alumniVerifiedPage";
 
+
 function App() {
   return (
     <Router>
@@ -26,7 +27,8 @@ function App() {
 
         <Route path="/alumniVerified" element={<AlumniVerifiedPage />} />
 
-        {/* Redirect semua rute yang tidak dikenal ke login */}
+     
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
