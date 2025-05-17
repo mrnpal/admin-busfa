@@ -5,6 +5,7 @@ import KegiatanPage from "./pages/kegiatanPage";
 import Login from "./pages/login"; 
 import VerifyAlumniPage from"./pages/verifikasiAlumni";
 import AlumniVerifiedPage from "./pages/alumniVerifiedPage";
+import JobPage from "./pages/addJobForm";
 
 
 function App() {
@@ -26,6 +27,8 @@ function App() {
         <Route path="/verifikasi" element={<VerifyAlumniPage />} />
 
         <Route path="/alumniVerified" element={<AlumniVerifiedPage />} />
+
+        <Route path="/pekerjaan" element={<JobPage/>} />
 
      
 

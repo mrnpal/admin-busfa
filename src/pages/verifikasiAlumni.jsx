@@ -75,9 +75,10 @@ const VerifikasiAlumniPage = () => {
           <ul>
             <button onClick={() => navigate("/dashboard")}>Dashboard</button>
             <button onClick={() => navigate("/alumni")}>Alumni</button>
+            <button onClick={() => navigate("/alumniVerified")}>Alumni Terverifikasi</button>
             <button onClick={() => navigate("/kegiatan")}>Kegiatan</button>
             <button onClick={() => navigate("/verifikasi")}>Verifikasi Alumni</button>
-            <button onClick={() => navigate("/alumniVerified")}>Alumni Terverifikasi</button>
+            <button onClick={() => navigate("/pekerjaan")}>Tambah Pekerjaan</button>
           </ul>
         </div>
         <button className="logout-button" onClick={() => navigate("/logout")}>

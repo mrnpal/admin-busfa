@@ -11,6 +11,7 @@ const Dashboard = () => {
   const [kegiatanCount, setKegiatanCount] = useState(0);
   const [pendingCount, setPendingCount] = useState(0);
   const [alumniVerifiedCount, setAlumniVerifiedCount] = useState(0);
+  const [pekerjaanCount, setPekerjaanCount] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,6 +23,7 @@ const Dashboard = () => {
       const alumniSnapshot = await getDocs(collection(db, "alumni"));
       const kegiatanSnapshot = await getDocs(collection(db, "kegiatan"));
       const alumniVerifiedSnapshot = await getDocs(collection(db, "alumniVerified"));
+      const pekerjaanSnapshot = await getDocs(collection(db, "jobs"));
 
       const pendingQuery = query(
         collection(db, "pendingAlumni"),
@@ -32,6 +34,7 @@ const Dashboard = () => {
       setAlumniCount(alumniSnapshot.size);
       setKegiatanCount(kegiatanSnapshot.size);
       setPendingCount(pendingSnapshot.size);
+      setPekerjaanCount(pekerjaanSnapshot.size);
       setAlumniVerifiedCount(alumniVerifiedSnapshot.size);
     } catch (error) {
       console.error("Gagal mengambil data:", error);
@@ -66,9 +69,10 @@ const Dashboard = () => {
           <ul>
             <button onClick={() => navigate("/dashboard")}>Dashboard</button>
             <button onClick={() => navigate("/alumni")}>Alumni</button>
+            <button onClick={() => navigate("/alumniVerified")}>Alumni Terverifikasi</button>
             <button onClick={() => navigate("/kegiatan")}>Kegiatan</button>
             <button onClick={() => navigate("/verifikasi")}>Verifikasi Alumni</button>
-            <button onClick={() => navigate("/alumniVerified")}>Alumni Terverifikasi</button>
+            <button onClick={() => navigate("/pekerjaan")}>Tambah Pekerjaan</button>
           </ul>
         </div>
         <button className="logout-button" onClick={() => setShowLogoutModal(true)}>Logout</button>
@@ -110,9 +114,14 @@ const Dashboard = () => {
             <h3>KEGIATAN</h3>
             <p>{kegiatanCount}</p>
           </div>
-          
-         
-          
+
+          <div 
+            className="card clickable-card" 
+            onClick={() => handleCardClick("/pekerjaan")}
+          >
+            <h3>LOWONGAN KERJA</h3>
+            <p>{pekerjaanCount}</p>
+          </div>
           
           <div 
             className="card clickable-card" 
