@@ -78,7 +78,7 @@ const Dashboard = () => {
       <div className="main-content">
         <h1>DASHBOARD</h1>
         <div className="cards">
-          {/* Card Total Alumni - mengarah ke halaman alumni */}
+          
           <div 
             className="card clickable-card" 
             onClick={() => handleCardClick("/alumni")}
@@ -86,8 +86,23 @@ const Dashboard = () => {
             <h3>TOTAL ALUMNI</h3>
             <p>{alumniCount + alumniVerifiedCount}</p>
           </div>
+
+          <div 
+            className="card clickable-card" 
+            onClick={() => handleCardClick("/alumni")}
+          >
+            <h3>ALUMNI</h3>
+            <p>{alumniCount}</p>
+          </div>
           
-          {/* Card Kegiatan - mengarah ke halaman kegiatan */}
+          <div 
+            className="card clickable-card" 
+            onClick={() => handleCardClick("/alumniVerified")}
+          >
+            <h3>ALUMNI TERVERIFIKASI</h3>
+            <p>{alumniVerifiedCount}</p>
+          </div>
+         
           <div 
             className="card clickable-card" 
             onClick={() => handleCardClick("/kegiatan")}
@@ -96,16 +111,9 @@ const Dashboard = () => {
             <p>{kegiatanCount}</p>
           </div>
           
-          {/* Card Alumni Terverifikasi - mengarah ke halaman alumni terverifikasi */}
-          <div 
-            className="card clickable-card" 
-            onClick={() => handleCardClick("/alumniVerified")}
-          >
-            <h3>ALUMNI TERVERIFIKASI</h3>
-            <p>{alumniVerifiedCount}</p>
-          </div>
+         
           
-          {/* Card Alumni Pending - mengarah ke halaman verifikasi */}
+          
           <div 
             className="card clickable-card" 
             onClick={() => handleCardClick("/verifikasi")}

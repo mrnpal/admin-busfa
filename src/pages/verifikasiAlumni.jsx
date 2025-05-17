@@ -39,7 +39,7 @@ const VerifikasiAlumniPage = () => {
 
     await Promise.all([
       setDoc(doc(db, "alumniVerified", alumni.id), alumniData),
-      setDoc(doc(db, "alumni", alumni.id), alumniData),
+      
       deleteDoc(doc(db, "pendingAlumni", alumni.id)),
     ]);
 
