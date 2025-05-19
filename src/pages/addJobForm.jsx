@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
-import { collection, addDoc, getDocs, Timestamp } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, doc, Timestamp } from 'firebase/firestore';
 import '../Dashboard.css';
 
 const JobPage = () => {
@@ -21,16 +21,18 @@ const JobPage = () => {
   const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
-    const fetchJobs = async () => {
-      const snapshot = await getDocs(collection(db, 'jobs'));
-      const data = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setJobs(data);
-    };
     fetchJobs();
-  }, [formData]); // refresh saat formData berubah (setelah submit)
+    // eslint-disable-next-line
+  }, [formData]);
+
+  const fetchJobs = async () => {
+    const snapshot = await getDocs(collection(db, 'jobs'));
+    const data = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setJobs(data);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,9 +66,22 @@ const JobPage = () => {
         deadline: '',
         salary: '',
       });
+      fetchJobs();
     } catch (error) {
       console.error('Error posting job:', error);
       alert('Failed to post job');
+    }
+  };
+
+  // Fungsi hapus job
+  const handleDelete = async (id) => {
+    if (window.confirm('Yakin ingin menghapus lowongan ini?')) {
+      try {
+        await deleteDoc(doc(db, 'jobs', id));
+        fetchJobs();
+      } catch (error) {
+        alert('Gagal menghapus lowongan');
+      }
     }
   };
 
@@ -88,26 +103,17 @@ const JobPage = () => {
       </div>
 
       <div className="main-content">
-        <h2 className="job-form-title">Add Job Posting</h2>
+        <h2 className="job-form-title">Tambah Lowongan Pekerjaan</h2>
         <form onSubmit={handleSubmit} className="form-grid">
           <input name="title" placeholder="Job Title" value={formData.title} onChange={handleChange} className="form-input" required />
-
           <input name="company" placeholder="Company Name" value={formData.company} onChange={handleChange} className="form-input" required />
-
           <input name="companyLogo" placeholder="Company Logo URL (optional)" value={formData.companyLogo} onChange={handleChange} className="form-input" />
-
           <input name="type" placeholder="Job Type (e.g. Full-time)" value={formData.type} onChange={handleChange} className="form-input" required />
-
           <input name="location" placeholder="Location" value={formData.location} onChange={handleChange} className="form-input" required />
-
           <textarea name="description" placeholder="Job Description" value={formData.description} onChange={handleChange} className="form-textarea" required />
-
           <textarea name="requirements" placeholder="Requirements (one per line)" value={formData.requirements} onChange={handleChange} className="form-textarea" required />
-
           <input type="date" name="deadline" value={formData.deadline} onChange={handleChange} className="form-input" required />
-
           <input name="salary" placeholder="Salary (optional)" value={formData.salary} onChange={handleChange} className="form-input" />
-
           <button type="submit" className="btn btn-add">Submit Job</button>
         </form>
 
@@ -124,6 +130,7 @@ const JobPage = () => {
                 <th>Lokasi</th>
                 <th>Deadline</th>
                 <th>Gaji</th>
+                <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -143,6 +150,11 @@ const JobPage = () => {
                   <td>{job.location}</td>
                   <td>{job.deadline && job.deadline.toDate ? job.deadline.toDate().toLocaleDateString() : '-'}</td>
                   <td>{job.salary || '-'}</td>
+                  <td>
+                    <button className="btn btn-delete" onClick={() => handleDelete(job.id)}>
+                      Hapus
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
