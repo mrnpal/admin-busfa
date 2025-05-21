@@ -2,7 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, addDoc, getDocs, deleteDoc, doc, Timestamp } from 'firebase/firestore';
-import '../Dashboard.css';
+import { 
+  FiHome, 
+  FiUsers, 
+  FiCheckCircle, 
+  FiCalendar, 
+  FiClipboard, 
+  FiBriefcase, 
+  FiLogOut,
+  FiTrash2,
+  FiPlus,
+  FiDollarSign,
+  FiMapPin,
+  FiClock,
+  FiType,
+  FiInfo,
+  FiList
+} from 'react-icons/fi';
+import '../jobPage.css';
 
 const JobPage = () => {
   const navigate = useNavigate();
@@ -19,19 +36,28 @@ const JobPage = () => {
   });
 
   const [jobs, setJobs] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     fetchJobs();
-    // eslint-disable-next-line
-  }, [formData]);
+  }, []);
 
   const fetchJobs = async () => {
-    const snapshot = await getDocs(collection(db, 'jobs'));
-    const data = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setJobs(data);
+    setIsLoading(true);
+    try {
+      const snapshot = await getDocs(collection(db, 'jobs'));
+      const data = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        formattedDeadline: doc.data().deadline?.toDate?.().toLocaleDateString('id-ID') || '-'
+      }));
+      setJobs(data);
+    } catch (error) {
+      console.error('Error fetching jobs:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -41,6 +67,7 @@ const JobPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const jobData = {
         ...formData,
@@ -54,7 +81,6 @@ const JobPage = () => {
       };
 
       await addDoc(collection(db, 'jobs'), jobData);
-      alert('Job posted successfully!');
       setFormData({
         title: '',
         company: '',
@@ -66,99 +92,318 @@ const JobPage = () => {
         deadline: '',
         salary: '',
       });
-      fetchJobs();
+      await fetchJobs();
     } catch (error) {
       console.error('Error posting job:', error);
-      alert('Failed to post job');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Fungsi hapus job
   const handleDelete = async (id) => {
     if (window.confirm('Yakin ingin menghapus lowongan ini?')) {
+      setIsLoading(true);
       try {
         await deleteDoc(doc(db, 'jobs', id));
-        fetchJobs();
+        await fetchJobs();
       } catch (error) {
-        alert('Gagal menghapus lowongan');
+        console.error('Error deleting job:', error);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
   return (
-    <div className="dashboard-container">
+    <div className={`dashboard-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+      {/* Sidebar */}
       <div className="sidebar">
-        <div>
-          <h2>Admin Panel</h2>
-          <ul>
-            <button onClick={() => navigate("/dashboard")}>Dashboard</button>
-            <button onClick={() => navigate("/alumni")}>Alumni</button>
-            <button onClick={() => navigate("/alumniVerified")}>Alumni Terverifikasi</button>
-            <button onClick={() => navigate("/kegiatan")}>Kegiatan</button>
-            <button onClick={() => navigate("/verifikasi")}>Verifikasi Alumni</button>
-            <button onClick={() => navigate("/pekerjaan")}>Tambah Pekerjaan</button>
-          </ul>
+        <div className="sidebar-header">
+          <h2>{isSidebarCollapsed ? 'AP' : 'Admin Panel'}</h2>
+          <button className="sidebar-toggle" onClick={toggleSidebar}>
+            {isSidebarCollapsed ? '»' : '«'}
+          </button>
         </div>
-        <button className="logout-button" onClick={() => navigate("/logout")}>Logout</button>
+        <ul className="sidebar-menu">
+          <li>
+            <button onClick={() => navigate("/dashboard")} className="menu-item">
+              <FiHome className="menu-icon" />
+              {!isSidebarCollapsed && <span>Dashboard</span>}
+            </button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/alumni")} className="menu-item">
+              <FiUsers className="menu-icon" />
+              {!isSidebarCollapsed && <span>Alumni</span>}
+            </button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/alumniVerified")} className="menu-item">
+              <FiCheckCircle className="menu-icon" />
+              {!isSidebarCollapsed && <span>Alumni Terverifikasi</span>}
+            </button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/kegiatan")} className="menu-item">
+              <FiCalendar className="menu-icon" />
+              {!isSidebarCollapsed && <span>Kegiatan</span>}
+            </button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/verifikasi")} className="menu-item">
+              <FiClipboard className="menu-icon" />
+              {!isSidebarCollapsed && <span>Verifikasi Alumni</span>}
+            </button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/pekerjaan")} className="menu-item active">
+              <FiBriefcase className="menu-icon" />
+              {!isSidebarCollapsed && <span>Tambah Pekerjaan</span>}
+            </button>
+          </li>
+        </ul>
+        <button className="logout-button menu-item" onClick={() => navigate("/logout")}>
+          <FiLogOut className="menu-icon" />
+          {!isSidebarCollapsed && <span>Logout</span>}
+        </button>
       </div>
 
+      {/* Main Content */}
       <div className="main-content">
-        <h2 className="job-form-title">Tambah Lowongan Pekerjaan</h2>
-        <form onSubmit={handleSubmit} className="form-grid">
-          <input name="title" placeholder="Job Title" value={formData.title} onChange={handleChange} className="form-input" required />
-          <input name="company" placeholder="Company Name" value={formData.company} onChange={handleChange} className="form-input" required />
-          <input name="companyLogo" placeholder="Company Logo URL (optional)" value={formData.companyLogo} onChange={handleChange} className="form-input" />
-          <input name="type" placeholder="Job Type (e.g. Full-time)" value={formData.type} onChange={handleChange} className="form-input" required />
-          <input name="location" placeholder="Location" value={formData.location} onChange={handleChange} className="form-input" required />
-          <textarea name="description" placeholder="Job Description" value={formData.description} onChange={handleChange} className="form-textarea" required />
-          <textarea name="requirements" placeholder="Requirements (one per line)" value={formData.requirements} onChange={handleChange} className="form-textarea" required />
-          <input type="date" name="deadline" value={formData.deadline} onChange={handleChange} className="form-input" required />
-          <input name="salary" placeholder="Salary (optional)" value={formData.salary} onChange={handleChange} className="form-input" />
-          <button type="submit" className="btn btn-add">Submit Job</button>
-        </form>
+        <header className="main-header">
+          <h1>Manajemen Lowongan Pekerjaan</h1>
+          <div className="user-info">
+            <span>Admin</span>
+            <div className="user-avatar">
+              <FiBriefcase size={18} />
+            </div>
+          </div>
+        </header>
 
-        <h2 style={{marginTop: 32}}>Daftar Lowongan</h2>
-        <div className="table-responsive">
-          <table className="alumni-table">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Judul</th>
-                <th>Perusahaan</th>
-                <th>Logo</th>
-                <th>Tipe</th>
-                <th>Lokasi</th>
-                <th>Deadline</th>
-                <th>Gaji</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              {jobs.map((job, idx) => (
-                <tr key={job.id}>
-                  <td>{idx + 1}</td>
-                  <td>{job.title}</td>
-                  <td>{job.company}</td>
-                  <td>
-                    {job.companyLogo ? (
-                      <img src={job.companyLogo} alt={job.company} style={{width: 48, height: 48, objectFit: 'contain', borderRadius: 8}} />
-                    ) : (
-                      <span style={{color: '#aaa'}}>—</span>
-                    )}
-                  </td>
-                  <td>{job.type}</td>
-                  <td>{job.location}</td>
-                  <td>{job.deadline && job.deadline.toDate ? job.deadline.toDate().toLocaleDateString() : '-'}</td>
-                  <td>{job.salary || '-'}</td>
-                  <td>
-                    <button className="btn btn-delete" onClick={() => handleDelete(job.id)}>
-                      Hapus
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="content-card">
+          <h2 className="section-title">
+            <FiPlus className="title-icon" />
+            Tambah Lowongan Baru
+          </h2>
+          
+          <form onSubmit={handleSubmit} className="form-grid">
+            <div className="form-group">
+              <label>Judul Pekerjaan</label>
+              <div className="input-with-icon">
+                <FiType className="input-icon" />
+                <input
+                  name="title"
+                  placeholder="Contoh: Frontend Developer"
+                  value={formData.title}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Nama Perusahaan</label>
+              <input
+                name="company"
+                placeholder="Contoh: PT. Contoh Indonesia"
+                value={formData.company}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Logo Perusahaan (URL)</label>
+              <input
+                name="companyLogo"
+                placeholder="https://contoh.com/logo.png (opsional)"
+                value={formData.companyLogo}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Tipe Pekerjaan</label>
+              <div className="input-with-icon">
+                <FiBriefcase className="input-icon" />
+                <input
+                  name="type"
+                  placeholder="Contoh: Full-time, Part-time"
+                  value={formData.type}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Lokasi</label>
+              <div className="input-with-icon">
+                <FiMapPin className="input-icon" />
+                <input
+                  name="location"
+                  placeholder="Contoh: Jakarta, Remote"
+                  value={formData.location}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Deskripsi Pekerjaan</label>
+              <div className="input-with-icon">
+                <FiInfo className="input-icon" />
+                <textarea
+                  name="description"
+                  placeholder="Deskripsikan pekerjaan secara detail"
+                  value={formData.description}
+                  onChange={handleChange}
+                  rows="4"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Persyaratan</label>
+              <div className="input-with-icon">
+                <FiList className="input-icon" />
+                <textarea
+                  name="requirements"
+                  placeholder="Satu persyaratan per baris"
+                  value={formData.requirements}
+                  onChange={handleChange}
+                  rows="4"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Batas Waktu</label>
+              <div className="input-with-icon">
+                <FiClock className="input-icon" />
+                <input
+                  type="date"
+                  name="deadline"
+                  value={formData.deadline}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Gaji</label>
+              <div className="input-with-icon">
+                <FiDollarSign className="input-icon" />
+                <input
+                  name="salary"
+                  placeholder="Contoh: Rp 8.000.000 - Rp 12.000.000 (opsional)"
+                  value={formData.salary}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <button 
+              type="submit" 
+              className="btn btn-primary"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <span className="loading-spinner"></span>
+              ) : (
+                <>
+                  <FiPlus className="btn-icon" />
+                  Tambah Lowongan
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+
+        <div className="content-card">
+          <h2 className="section-title">
+            <FiBriefcase className="title-icon" />
+            Daftar Lowongan
+          </h2>
+
+          {isLoading ? (
+            <div className="loading-state">
+              <div className="loading-spinner large"></div>
+              <p>Memuat data lowongan...</p>
+            </div>
+          ) : jobs.length === 0 ? (
+            <div className="empty-state">
+              <img 
+                src="https://illustrations.popsy.co/amber/no-jobs.svg" 
+                alt="No jobs" 
+                className="empty-image"
+              />
+              <h3>Belum ada lowongan</h3>
+              <p>Tambahkan lowongan baru untuk ditampilkan di sini</p>
+            </div>
+          ) : (
+            <div className="responsive-table-container">
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Judul</th>
+                    <th>Perusahaan</th>
+                    <th>Logo</th>
+                    <th>Tipe</th>
+                    <th>Lokasi</th>
+                    <th>Batas Waktu</th>
+                    <th>Gaji</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {jobs.map((job, idx) => (
+                    <tr key={job.id}>
+                      <td>{idx + 1}</td>
+                      <td className="job-title">{job.title}</td>
+                      <td>{job.company}</td>
+                      <td>
+                        {job.companyLogo ? (
+                          <img 
+                            src={job.companyLogo} 
+                            alt={job.company} 
+                            className="company-logo"
+                          />
+                        ) : (
+                          <div className="logo-placeholder">
+                            <FiBriefcase />
+                          </div>
+                        )}
+                      </td>
+                      <td>{job.type}</td>
+                      <td>{job.location}</td>
+                      <td>{job.formattedDeadline}</td>
+                      <td>{job.salary || '-'}</td>
+                      <td className="action-buttons">
+                        <button 
+                          className="btn btn-danger"
+                          onClick={() => handleDelete(job.id)}
+                          disabled={isLoading}
+                        >
+                          <FiTrash2 className="btn-icon" />
+                          Hapus
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     </div>

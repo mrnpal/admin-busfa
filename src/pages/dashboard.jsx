@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
+import { FiHome, FiUsers, FiCheckCircle, FiCalendar, FiClipboard, FiBriefcase, FiLogOut } from "react-icons/fi";
 import "../Dashboard.css";
 
 const Dashboard = () => {
@@ -12,6 +13,7 @@ const Dashboard = () => {
   const [pendingCount, setPendingCount] = useState(0);
   const [alumniVerifiedCount, setAlumniVerifiedCount] = useState(0);
   const [pekerjaanCount, setPekerjaanCount] = useState(0);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,11 +27,7 @@ const Dashboard = () => {
       const alumniVerifiedSnapshot = await getDocs(collection(db, "alumniVerified"));
       const pekerjaanSnapshot = await getDocs(collection(db, "jobs"));
 
-      const pendingQuery = query(
-        collection(db, "pendingAlumni"),
-        where("isVerified", "==", false)
-      );
-      const pendingSnapshot = await getDocs(pendingQuery);
+      const pendingSnapshot = await getDocs(collection(db, "pendingAlumni"));
 
       setAlumniCount(alumniSnapshot.size);
       setKegiatanCount(kegiatanSnapshot.size);
@@ -55,80 +53,148 @@ const Dashboard = () => {
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  // Fungsi untuk menangani klik card
   const handleCardClick = (route) => {
     navigate(route);
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
   return (
-    <div className="dashboard-container">
+    <div className={`dashboard-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
       {/* Sidebar */}
       <div className="sidebar">
-        <div>
-          <h2>Admin Panel</h2>
-          <ul>
-            <button onClick={() => navigate("/dashboard")}>Dashboard</button>
-            <button onClick={() => navigate("/alumni")}>Alumni</button>
-            <button onClick={() => navigate("/alumniVerified")}>Alumni Terverifikasi</button>
-            <button onClick={() => navigate("/kegiatan")}>Kegiatan</button>
-            <button onClick={() => navigate("/verifikasi")}>Verifikasi Alumni</button>
-            <button onClick={() => navigate("/pekerjaan")}>Tambah Pekerjaan</button>
-          </ul>
+        <div className="sidebar-header">
+          <h2>{isSidebarCollapsed ? 'AP' : 'Admin Panel'}</h2>
+          <button className="sidebar-toggle" onClick={toggleSidebar}>
+            {isSidebarCollapsed ? '»' : '«'}
+          </button>
         </div>
-        <button className="logout-button" onClick={() => setShowLogoutModal(true)}>Logout</button>
+        <ul className="sidebar-menu">
+          <li>
+            <button onClick={() => navigate("/dashboard")} className="menu-item">
+              <FiHome className="menu-icon" />
+              {!isSidebarCollapsed && <span>Dashboard</span>}
+            </button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/alumni")} className="menu-item">
+              <FiUsers className="menu-icon" />
+              {!isSidebarCollapsed && <span>Alumni</span>}
+            </button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/alumniVerified")} className="menu-item">
+              <FiCheckCircle className="menu-icon" />
+              {!isSidebarCollapsed && <span>Alumni Terverifikasi</span>}
+            </button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/kegiatan")} className="menu-item">
+              <FiCalendar className="menu-icon" />
+              {!isSidebarCollapsed && <span>Kegiatan</span>}
+            </button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/verifikasi")} className="menu-item">
+              <FiClipboard className="menu-icon" />
+              {!isSidebarCollapsed && <span>Verifikasi Alumni</span>}
+            </button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/pekerjaan")} className="menu-item">
+              <FiBriefcase className="menu-icon" />
+              {!isSidebarCollapsed && <span>Tambah Pekerjaan</span>}
+            </button>
+          </li>
+        </ul>
+        <button 
+          className="logout-button menu-item" 
+          onClick={() => setShowLogoutModal(true)}
+        >
+          <FiLogOut className="menu-icon" />
+          {!isSidebarCollapsed && <span>Logout</span>}
+        </button>
       </div>
 
       {/* Main Content */}
       <div className="main-content">
-        <h1>DASHBOARD</h1>
-        <div className="cards">
-          
+        <header className="main-header">
+          <h1>Dashboard</h1>
+          <div className="user-info">
+            <span>Admin</span>
+            <div className="user-avatar">
+              {auth.currentUser?.email?.charAt(0).toUpperCase()}
+            </div>
+          </div>
+        </header>
+
+        <div className="stats-grid">
           <div 
-            className="card clickable-card" 
+            className="stat-card primary" 
             onClick={() => handleCardClick("/alumni")}
           >
-            <h3>TOTAL ALUMNI</h3>
-            <p>{alumniCount + alumniVerifiedCount}</p>
+            <h3>Total Alumni</h3>
+            <p className="stat-value">{alumniCount + alumniVerifiedCount}</p>
+            <div className="stat-icon">
+              <FiUsers size={24} />
+            </div>
           </div>
 
           <div 
-            className="card clickable-card" 
+            className="stat-card secondary" 
             onClick={() => handleCardClick("/alumni")}
           >
-            <h3>ALUMNI</h3>
-            <p>{alumniCount}</p>
+            <h3>Alumni</h3>
+            <p className="stat-value">{alumniCount}</p>
+            <div className="stat-icon">
+              <FiUsers size={24} />
+            </div>
           </div>
           
           <div 
-            className="card clickable-card" 
+            className="stat-card success" 
             onClick={() => handleCardClick("/alumniVerified")}
           >
-            <h3>ALUMNI TERVERIFIKASI</h3>
-            <p>{alumniVerifiedCount}</p>
+            <h3>Alumni Terverifikasi</h3>
+            <p className="stat-value">{alumniVerifiedCount}</p>
+            <div className="stat-icon">
+              <FiCheckCircle size={24} />
+            </div>
           </div>
          
           <div 
-            className="card clickable-card" 
+            className="stat-card info" 
             onClick={() => handleCardClick("/kegiatan")}
           >
-            <h3>KEGIATAN</h3>
-            <p>{kegiatanCount}</p>
+            <h3>Kegiatan</h3>
+            <p className="stat-value">{kegiatanCount}</p>
+            <div className="stat-icon">
+              <FiCalendar size={24} />
+            </div>
           </div>
 
           <div 
-            className="card clickable-card" 
+            className="stat-card warning" 
             onClick={() => handleCardClick("/pekerjaan")}
           >
-            <h3>LOWONGAN KERJA</h3>
-            <p>{pekerjaanCount}</p>
+            <h3>Lowongan Kerja</h3>
+            <p className="stat-value">{pekerjaanCount}</p>
+            <div className="stat-icon">
+              <FiBriefcase size={24} />
+            </div>
           </div>
           
           <div 
-            className="card clickable-card" 
+            className="stat-card danger" 
             onClick={() => handleCardClick("/verifikasi")}
           >
-            <h3>ALUMNI PENDING</h3>
-            <p>{pendingCount}</p>
+            <h3>Alumni Pending</h3>
+            <p className="stat-value">{pendingCount}</p>
+            <div className="stat-icon">
+              <FiClipboard size={24} />
+            </div>
           </div>
         </div>
       </div>
@@ -137,10 +203,11 @@ const Dashboard = () => {
       {showLogoutModal && (
         <div className="modal-overlay">
           <div className="modal">
+            <h3>Konfirmasi Logout</h3>
             <p>Apakah Anda yakin ingin logout?</p>
             <div className="modal-buttons">
-              <button className="btn-confirm" onClick={handleLogout}>Ya</button>
-              <button className="btn-cancel" onClick={() => setShowLogoutModal(false)}>Tidak</button>
+              <button className="btn btn-confirm" onClick={handleLogout}>Ya</button>
+              <button className="btn btn-cancel" onClick={() => setShowLogoutModal(false)}>Tidak</button>
             </div>
           </div>
         </div>

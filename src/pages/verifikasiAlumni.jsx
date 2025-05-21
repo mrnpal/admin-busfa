@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  collection,
-  getDocs,
-  setDoc,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
+import { collection, getDocs, setDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
+import { FiCheck, FiX, FiUser, FiMail, FiHome, FiPhone, FiBriefcase, FiCalendar } from "react-icons/fi";
 import "../verifikasiAlumni.css";
 
 const VerifikasiAlumniPage = () => {
   const [pendingAlumni, setPendingAlumni] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,38 +16,38 @@ const VerifikasiAlumniPage = () => {
   }, []);
 
   const fetchPendingAlumni = async () => {
-    const snapshot = await getDocs(collection(db, "pendingAlumni"));
-    const data = snapshot.docs.map((doc) => ({
-      id: doc.id, 
-      ...doc.data(),
-    }));
-    setPendingAlumni(data);
+    try {
+      const snapshot = await getDocs(collection(db, "pendingAlumni"));
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id, 
+        ...doc.data(),
+      }));
+      setPendingAlumni(data);
+    } catch (error) {
+      console.error("Error fetching pending alumni:", error);
+    }
   };
 
   const handleVerify = async (alumni) => {
-  setLoading(true);
-  try {
-    // Simpan ke koleksi alumniVerified dan alumni
-    const alumniData = {
-      ...alumni,
-      isVerified: true,
-    };
+    setLoading(true);
+    try {
+      const alumniData = {
+        ...alumni,
+        isVerified: true,
+      };
 
-    await Promise.all([
-      setDoc(doc(db, "alumniVerified", alumni.id), alumniData),
+      await Promise.all([
+        setDoc(doc(db, "alumniVerified", alumni.id), alumniData),
+        deleteDoc(doc(db, "pendingAlumni", alumni.id)),
+      ]);
       
-      deleteDoc(doc(db, "pendingAlumni", alumni.id)),
-    ]);
-
-    
-    fetchPendingAlumni(); // refresh daftar
-  } catch (error) {
-    console.error("Gagal memverifikasi alumni:", error);
-  } finally {
-    setLoading(false);
-  }
-};
-
+      fetchPendingAlumni();
+    } catch (error) {
+      console.error("Gagal memverifikasi alumni:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleReject = async (alumniId) => {
     try {
@@ -62,77 +58,138 @@ const VerifikasiAlumniPage = () => {
     }
   };
 
-  
-
-  
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
 
   return (
-    <div className="dashboard-container">
+    <div className={`dashboard-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
       {/* Sidebar */}
       <div className="sidebar">
-        <div>
-          <h2>Admin Panel</h2>
-          <ul>
-            <button onClick={() => navigate("/dashboard")}>Dashboard</button>
-            <button onClick={() => navigate("/alumni")}>Alumni</button>
-            <button onClick={() => navigate("/alumniVerified")}>Alumni Terverifikasi</button>
-            <button onClick={() => navigate("/kegiatan")}>Kegiatan</button>
-            <button onClick={() => navigate("/verifikasi")}>Verifikasi Alumni</button>
-            <button onClick={() => navigate("/pekerjaan")}>Tambah Pekerjaan</button>
-          </ul>
+        <div className="sidebar-header">
+          <h2>{isSidebarCollapsed ? 'AP' : 'Admin Panel'}</h2>
+          <button className="sidebar-toggle" onClick={toggleSidebar}>
+            {isSidebarCollapsed ? '»' : '«'}
+          </button>
         </div>
-        <button className="logout-button" onClick={() => navigate("/logout")}>
-          Logout
+        <ul className="sidebar-menu">
+          <li>
+            <button onClick={() => navigate("/dashboard")} className="menu-item">
+              <FiHome className="menu-icon" />
+              {!isSidebarCollapsed && <span>Dashboard</span>}
+            </button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/alumni")} className="menu-item">
+              <FiUser className="menu-icon" />
+              {!isSidebarCollapsed && <span>Alumni</span>}
+            </button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/alumniVerified")} className="menu-item">
+              <FiCheck className="menu-icon" />
+              {!isSidebarCollapsed && <span>Alumni Terverifikasi</span>}
+            </button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/kegiatan")} className="menu-item">
+              <FiCalendar className="menu-icon" />
+              {!isSidebarCollapsed && <span>Kegiatan</span>}
+            </button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/verifikasi")} className="menu-item active">
+              <FiUser className="menu-icon" />
+              {!isSidebarCollapsed && <span>Verifikasi Alumni</span>}
+            </button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/pekerjaan")} className="menu-item">
+              <FiBriefcase className="menu-icon" />
+              {!isSidebarCollapsed && <span>Tambah Pekerjaan</span>}
+            </button>
+          </li>
+        </ul>
+        <button className="logout-button menu-item" onClick={() => navigate("/logout")}>
+          <FiX className="menu-icon" />
+          {!isSidebarCollapsed && <span>Logout</span>}
         </button>
       </div>
 
       {/* Main Content */}
       <div className="main-content">
-        <h1>Verifikasi Alumni</h1>
-        {pendingAlumni.length === 0 ? (
-          <p>Tidak ada pendaftar yang menunggu verifikasi.</p>
-        ) : (
-          <table className="alumni-table">
-            <thead>
-              <tr>
-                <th>Nama</th>
-                <th>Email</th>
-                <th>Alamat</th>
-                <th>Telepon</th>
-                <th>Pekerjaan</th>
-                <th>Tahun Lulus</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pendingAlumni.map((alumni) => (
-                <tr key={alumni.id}>
-                  <td>{alumni.name}</td>
-                  <td>{alumni.email}</td>
-                  <td>{alumni.address}</td>
-                  <td>{alumni.phone}</td>
-                  <td>{alumni.job}</td>
-                  <td>{alumni.graduationYear}</td>
-                  <td>
-                    <button
-                      className="btn btn-add"
-                      onClick={() => handleVerify(alumni)}
-                      disabled={loading}
-                    >
-                      Verifikasi
-                    </button>
-                    <button
-                      className="btn btn-delete"
-                      onClick={() => handleReject(alumni.id)}
-                    >
-                      Tolak
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        <header className="main-header">
+          <h1>Verifikasi Alumni</h1>
+          <div className="user-info">
+            <span>Admin</span>
+            <div className="user-avatar">
+              <FiUser size={18} />
+            </div>
+          </div>
+        </header>
+
+        <div className="content-card">
+          {pendingAlumni.length === 0 ? (
+            <div className="empty-state">
+              <img 
+                src="https://illustrations.popsy.co/amber/people-waiting.svg" 
+                alt="No pending alumni" 
+                className="empty-image"
+              />
+              <h3>Tidak ada pendaftar yang menunggu verifikasi</h3>
+              <p>Semua permintaan verifikasi telah diproses</p>
+            </div>
+          ) : (
+            <div className="responsive-table-container">
+              <table className="alumni-table">
+                <thead>
+                  <tr>
+                    <th><FiUser className="table-icon" /> Nama</th>
+                    <th><FiMail className="table-icon" /> Email</th>
+                    <th><FiHome className="table-icon" /> Alamat</th>
+                    <th><FiPhone className="table-icon" /> Telepon</th>
+                    <th><FiBriefcase className="table-icon" /> Pekerjaan</th>
+                    <th><FiCalendar className="table-icon" /> Tahun Lulus</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pendingAlumni.map((alumni) => (
+                    <tr key={alumni.id}>
+                      <td data-label="Nama">{alumni.name}</td>
+                      <td data-label="Email">{alumni.email}</td>
+                      <td data-label="Alamat">{alumni.address || '-'}</td>
+                      <td data-label="Telepon">{alumni.phone || '-'}</td>
+                      <td data-label="Pekerjaan">{alumni.job || '-'}</td>
+                      <td data-label="Tahun Lulus">{alumni.graduationYear || '-'}</td>
+                      <td data-label="Aksi" className="action-buttons">
+                        <button
+                          className="btn btn-verify"
+                          onClick={() => handleVerify(alumni)}
+                          disabled={loading}
+                        >
+                          {loading ? (
+                            <span className="loading-spinner"></span>
+                          ) : (
+                            <>
+                              <FiCheck className="btn-icon" /> Verifikasi
+                            </>
+                          )}
+                        </button>
+                        <button
+                          className="btn btn-reject"
+                          onClick={() => handleReject(alumni.id)}
+                        >
+                          <FiX className="btn-icon" /> Tolak
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
