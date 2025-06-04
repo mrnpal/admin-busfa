@@ -342,7 +342,7 @@ const JobPage = () => {
           ) : jobs.length === 0 ? (
             <div className="empty-state">
               <img 
-                src="https://illustrations.popsy.co/amber/no-jobs.svg" 
+                src="1.jpg" 
                 alt="No jobs" 
                 className="empty-image"
               />

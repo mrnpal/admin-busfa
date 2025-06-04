@@ -132,7 +132,7 @@ const VerifikasiAlumniPage = () => {
           {pendingAlumni.length === 0 ? (
             <div className="empty-state">
               <img 
-                src="https://illustrations.popsy.co/amber/people-waiting.svg" 
+                src="1.jpg"
                 alt="No pending alumni" 
                 className="empty-image"
               />

@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "locabizapp"
-  }
+    "default": "busfa-app",
+    "busfa": "busfa-app"
+  },
+  "targets": {},
+  "etags": {}
 }

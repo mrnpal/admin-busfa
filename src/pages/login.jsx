@@ -29,6 +29,9 @@ const Login = () => {
         await signOut(auth);
         setError("Akses ditolak. Hanya admin yang dapat login.");
       } else {
+        // Simpan informasi login ke localStorage
+        localStorage.setItem("uid", uid);
+        localStorage.setItem("role", userData.role);
         navigate("/dashboard");
       }
     } catch (err) {

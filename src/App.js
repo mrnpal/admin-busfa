@@ -2,11 +2,11 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Dashboard from "./pages/dashboard";
 import AlumniPage from "./pages/alumniPage";
 import KegiatanPage from "./pages/kegiatanPage";
-import Login from "./pages/login"; 
-import VerifyAlumniPage from"./pages/verifikasiAlumni";
+import Login from "./pages/login";
+import VerifyAlumniPage from "./pages/verifikasiAlumni";
 import AlumniVerifiedPage from "./pages/alumniVerifiedPage";
 import JobPage from "./pages/addJobForm";
-
+import ProtectedRoute from "./services/ProtectedRoute"; // <- tambahkan ini
 
 function App() {
   return (
@@ -15,23 +15,62 @@ function App() {
         {/* Halaman login sebagai root */}
         <Route path="/" element={<Login />} />
 
-        {/* Halaman utama dashboard ringkasan */}
-        <Route path="/dashboard" element={<Dashboard />} />
+        {/* Semua halaman di bawah ini diproteksi */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
 
-        {/* Halaman kelola alumni */}
-        <Route path="/alumni" element={<AlumniPage />} />
+        <Route
+          path="/alumni"
+          element={
+            <ProtectedRoute>
+              <AlumniPage />
+            </ProtectedRoute>
+          }
+        />
 
-        {/* Halaman kelola kegiatan */}
-        <Route path="/kegiatan" element={<KegiatanPage />} />
+        <Route
+          path="/kegiatan"
+          element={
+            <ProtectedRoute>
+              <KegiatanPage />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/verifikasi" element={<VerifyAlumniPage />} />
+        <Route
+          path="/verifikasi"
+          element={
+            <ProtectedRoute>
+              <VerifyAlumniPage />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/alumniVerified" element={<AlumniVerifiedPage />} />
+        <Route
+          path="/alumniVerified"
+          element={
+            <ProtectedRoute>
+              <AlumniVerifiedPage />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/pekerjaan" element={<JobPage/>} />
+        <Route
+          path="/pekerjaan"
+          element={
+            <ProtectedRoute>
+              <JobPage />
+            </ProtectedRoute>
+          }
+        />
 
-     
-
+        {/* Redirect semua route tidak dikenal ke login */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
