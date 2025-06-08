@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
-import { db } from "../firebase"; 
+import { db } from "../../firebase"; 
 import { 
   FiHome, 
   FiUsers, 
@@ -19,7 +19,7 @@ import {
   FiMapPin,
   FiImage
 } from "react-icons/fi";
-import "../kegiatanPage.css";
+import "./kegiatanPage.css";
 
 const KegiatanPage = () => {
   const [activities, setActivities] = useState([]);

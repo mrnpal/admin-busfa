@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 import { FiHome, FiUsers, FiCheckCircle, FiCalendar, FiClipboard, FiBriefcase, FiLogOut, FiMapPin } from "react-icons/fi";
-import "../Dashboard.css";
+import "./Dashboard.css";
 
 const Dashboard = () => {
   const [alumniCount, setAlumniCount] = useState(0);

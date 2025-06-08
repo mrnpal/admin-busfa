@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { 
   FiHome, 
@@ -17,7 +17,7 @@ import {
   FiMapPin,
   FiAward
 } from "react-icons/fi";
-import "../alumniVerifiedPage.css";
+import "./alumniVerifiedPage.css";
 
 const AlumniPage = () => {
   const [alumni, setAlumni] = useState([]);

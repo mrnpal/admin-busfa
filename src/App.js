@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Dashboard from "./pages/dashboard";
-import AlumniPage from "./pages/alumniPage";
-import KegiatanPage from "./pages/kegiatanPage";
-import Login from "./pages/login";
-import VerifyAlumniPage from "./pages/verifikasiAlumni";
-import AlumniVerifiedPage from "./pages/alumniVerifiedPage";
-import JobPage from "./pages/addJobForm";
+import Dashboard from "./pages/dashboard/dashboardPage";
+import AlumniPage from "./pages/alumni/alumniPage";
+import KegiatanPage from "./pages/kegiatan/kegiatanPage";
+import Login from "./pages/login/loginPage";
+import VerifyAlumniPage from "./pages/verifikasiAlumni/verifikasiAlumni";
+import AlumniVerifiedPage from "./pages/alumniVerified/alumniVerifiedPage";
+import JobPage from "./pages/pekerjaan/addJobForm";
 import ProtectedRoute from "./services/ProtectedRoute"; 
-import MapsPage from "./pages/mapsPage";
+import MapsPage from "./pages/map/mapsPage";
 
 function App() {
   return (

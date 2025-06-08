@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs, setDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { 
@@ -24,7 +24,7 @@ import {
   FiUser,
   FiSearch
 } from "react-icons/fi";
-import "../alumniPage.css";
+import "./alumniPage.css";
 
 const AlumniPage = () => {
   const [alumni, setAlumni] = useState([]);

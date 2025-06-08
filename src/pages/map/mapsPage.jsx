@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import {
   GoogleMap,
   Marker,
@@ -20,7 +20,7 @@ import {
   FiInfo,
   FiPhone,
 } from "react-icons/fi";
-import "../alumniPage.css";
+import "./mapsPage.css";
 
 const containerStyle = {
   width: "100%",

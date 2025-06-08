@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, getDocs, setDoc, deleteDoc, doc } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { FiCheck, FiX, FiUser, FiMail, FiHome, FiPhone, FiBriefcase, FiCalendar, FiLogOut, FiMapPin, FiClipboard, FiCheckCircle, FiUsers } from "react-icons/fi";
-import "../verifikasiAlumni.css";
+import "./verifikasiAlumni.css";
 
 const VerifikasiAlumniPage = () => {
   const [pendingAlumni, setPendingAlumni] = useState([]);

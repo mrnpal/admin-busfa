@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { auth, db } from "../firebase";
+import { auth, db } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { FiLock, FiMail, FiLogIn } from "react-icons/fi";
-import "../login.css";
+import "./login.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");

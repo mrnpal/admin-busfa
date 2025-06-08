@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { db } from '../firebase';
+import { db } from '../../firebase';
 import { collection, addDoc, getDocs, deleteDoc, doc, Timestamp } from 'firebase/firestore';
 import { 
   FiHome, 
@@ -21,7 +21,7 @@ import {
   FiPhone,
   FiMail
 } from 'react-icons/fi';
-import '../jobPage.css';
+import './jobPage.css';
 
 const JobPage = () => {
   const navigate = useNavigate();
