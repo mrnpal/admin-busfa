@@ -102,9 +102,9 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
-.menu-item.active {
+/* .menu-item.active {
   background: var(--primary-color);
-}
+} */
 
 .menu-icon {
   margin-right: 1rem;

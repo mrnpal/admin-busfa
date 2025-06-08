@@ -4,7 +4,7 @@ import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
-import { FiHome, FiUsers, FiCheckCircle, FiCalendar, FiClipboard, FiBriefcase, FiLogOut } from "react-icons/fi";
+import { FiHome, FiUsers, FiCheckCircle, FiCalendar, FiClipboard, FiBriefcase, FiLogOut, FiMapPin } from "react-icons/fi";
 import "../Dashboard.css";
 
 const Dashboard = () => {
@@ -64,59 +64,62 @@ const Dashboard = () => {
   return (
     <div className={`dashboard-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
       {/* Sidebar */}
-      <div className="sidebar">
-        <div className="sidebar-header">
-          <h2>{isSidebarCollapsed ? 'AP' : 'Admin Panel'}</h2>
-          <button className="sidebar-toggle" onClick={toggleSidebar}>
-            {isSidebarCollapsed ? '»' : '«'}
-          </button>
-        </div>
-        <ul className="sidebar-menu">
-          <li>
-            <button onClick={() => navigate("/dashboard")} className="menu-item">
-              <FiHome className="menu-icon" />
-              {!isSidebarCollapsed && <span>Dashboard</span>}
-            </button>
-          </li>
-          <li>
-            <button onClick={() => navigate("/alumni")} className="menu-item">
-              <FiUsers className="menu-icon" />
-              {!isSidebarCollapsed && <span>Alumni</span>}
-            </button>
-          </li>
-          <li>
-            <button onClick={() => navigate("/alumniVerified")} className="menu-item">
-              <FiCheckCircle className="menu-icon" />
-              {!isSidebarCollapsed && <span>Alumni Terverifikasi</span>}
-            </button>
-          </li>
-          <li>
-            <button onClick={() => navigate("/kegiatan")} className="menu-item">
-              <FiCalendar className="menu-icon" />
-              {!isSidebarCollapsed && <span>Kegiatan</span>}
-            </button>
-          </li>
-          <li>
-            <button onClick={() => navigate("/verifikasi")} className="menu-item">
-              <FiClipboard className="menu-icon" />
-              {!isSidebarCollapsed && <span>Verifikasi Alumni</span>}
-            </button>
-          </li>
-          <li>
-            <button onClick={() => navigate("/pekerjaan")} className="menu-item">
-              <FiBriefcase className="menu-icon" />
-              {!isSidebarCollapsed && <span>Tambah Pekerjaan</span>}
-            </button>
-          </li>
-        </ul>
-        <button 
-          className="logout-button menu-item" 
-          onClick={() => setShowLogoutModal(true)}
-        >
-          <FiLogOut className="menu-icon" />
-          {!isSidebarCollapsed && <span>Logout</span>}
-        </button>
-      </div>
+            <div className="sidebar">
+              <div className="sidebar-header">
+                <h2>{isSidebarCollapsed ? "AP" : "Admin Panel"}</h2>
+                <button className="sidebar-toggle" onClick={toggleSidebar}>
+                  {isSidebarCollapsed ? "»" : "«"}
+                </button>
+              </div>
+              <ul className="sidebar-menu">
+                <li>
+                  <button onClick={() => navigate("/dashboard")} className="menu-item">
+                    <FiHome className="menu-icon" />
+                    {!isSidebarCollapsed && <span>Dashboard</span>}
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => navigate("/alumni")} className="menu-item">
+                    <FiUsers className="menu-icon" />
+                    {!isSidebarCollapsed && <span>Alumni</span>}
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => navigate("/alumniVerified")} className="menu-item">
+                    <FiCheckCircle className="menu-icon" />
+                    {!isSidebarCollapsed && <span>Alumni Terverifikasi</span>}
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => navigate("/kegiatan")} className="menu-item">
+                    <FiCalendar className="menu-icon" />
+                    {!isSidebarCollapsed && <span>Kegiatan</span>}
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => navigate("/verifikasi")} className="menu-item">
+                    <FiClipboard className="menu-icon" />
+                    {!isSidebarCollapsed && <span>Verifikasi Alumni</span>}
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => navigate("/pekerjaan")} className="menu-item">
+                    <FiBriefcase className="menu-icon" />
+                    {!isSidebarCollapsed && <span>Tambah Pekerjaan</span>}
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => navigate("/maps")} className="menu-item active">
+                    <FiMapPin className="menu-icon" />
+                    {!isSidebarCollapsed && <span>Peta Alumni</span>}
+                  </button>
+                </li>
+              </ul>
+              <button className="logout-button menu-item" onClick={() => navigate("/logout")}>
+                <FiLogOut className="menu-icon" />
+                {!isSidebarCollapsed && <span>Logout</span>}
+              </button>
+            </div>
 
       {/* Main Content */}
       <div className="main-content">

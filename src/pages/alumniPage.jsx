@@ -172,9 +172,9 @@ const AlumniPage = () => {
       {/* Sidebar */}
       <div className="sidebar">
         <div className="sidebar-header">
-          <h2>{isSidebarCollapsed ? 'AP' : 'Admin Panel'}</h2>
+          <h2>{isSidebarCollapsed ? "AP" : "Admin Panel"}</h2>
           <button className="sidebar-toggle" onClick={toggleSidebar}>
-            {isSidebarCollapsed ? '»' : '«'}
+            {isSidebarCollapsed ? "»" : "«"}
           </button>
         </div>
         <ul className="sidebar-menu">
@@ -185,7 +185,7 @@ const AlumniPage = () => {
             </button>
           </li>
           <li>
-            <button onClick={() => navigate("/alumni")} className="menu-item active">
+            <button onClick={() => navigate("/alumni")} className="menu-item">
               <FiUsers className="menu-icon" />
               {!isSidebarCollapsed && <span>Alumni</span>}
             </button>
@@ -212,6 +212,12 @@ const AlumniPage = () => {
             <button onClick={() => navigate("/pekerjaan")} className="menu-item">
               <FiBriefcase className="menu-icon" />
               {!isSidebarCollapsed && <span>Tambah Pekerjaan</span>}
+            </button>
+          </li>
+          <li>
+            <button onClick={() => navigate("/maps")} className="menu-item active">
+              <FiMapPin className="menu-icon" />
+              {!isSidebarCollapsed && <span>Peta Alumni</span>}
             </button>
           </li>
         </ul>

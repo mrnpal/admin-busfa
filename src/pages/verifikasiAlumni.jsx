@@ -63,11 +63,10 @@ const VerifikasiAlumniPage = () => {
   };
 
   return (
-    <div className={`dashboard-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+    <div className={`dashboard-container ${isSidebarCollapsed ? "sidebar-collapsed" : ""}`}>
       {/* Sidebar */}
-      {/* Sidebar */}
-            <div className="sidebar">
-              <div className="sidebar-header">
+      <div className="sidebar"> 
+        <div className="sidebar-header">
                 <h2>{isSidebarCollapsed ? "AP" : "Admin Panel"}</h2>
                 <button className="sidebar-toggle" onClick={toggleSidebar}>
                   {isSidebarCollapsed ? "»" : "«"}
