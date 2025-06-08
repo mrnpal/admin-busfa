@@ -6,7 +6,8 @@ import Login from "./pages/login";
 import VerifyAlumniPage from "./pages/verifikasiAlumni";
 import AlumniVerifiedPage from "./pages/alumniVerifiedPage";
 import JobPage from "./pages/addJobForm";
-import ProtectedRoute from "./services/ProtectedRoute"; // <- tambahkan ini
+import ProtectedRoute from "./services/ProtectedRoute"; 
+import MapsPage from "./pages/mapsPage";
 
 function App() {
   return (
@@ -69,7 +70,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/maps"
+          element={
+            <ProtectedRoute>
+              <MapsPage />
+            </ProtectedRoute>
+          }
+        />
         {/* Redirect semua route tidak dikenal ke login */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
