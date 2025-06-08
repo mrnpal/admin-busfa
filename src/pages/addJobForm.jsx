@@ -17,7 +17,9 @@ import {
   FiClock,
   FiType,
   FiInfo,
-  FiList
+  FiList,
+  FiPhone,
+  FiMail
 } from 'react-icons/fi';
 import '../jobPage.css';
 
@@ -33,6 +35,8 @@ const JobPage = () => {
     requirements: '',
     deadline: '',
     salary: '',
+    phoneContact: '',
+    emailContact: '',
   });
 
   const [jobs, setJobs] = useState([]);
@@ -91,6 +95,8 @@ const JobPage = () => {
         requirements: '',
         deadline: '',
         salary: '',
+        phoneContact: '',
+        emailContact: '',
       });
       await fetchJobs();
     } catch (error) {
@@ -308,6 +314,34 @@ const JobPage = () => {
                   value={formData.salary}
                   onChange={handleChange}
                 />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Kontak Perusahaan</label>
+            <div className="input-with-icon">
+              <FiPhone className="input-icon" />
+              <input
+                name="phoneContact"
+                type="tel"
+                placeholder="Nomor telepon yang dapat dihubungi"
+                value={formData.phoneContact}
+                onChange={handleChange}
+              />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Email Perusahaan</label>
+            <div className="input-with-icon">
+              <FiMail className="input-icon" />
+              <input
+                name="emailContact"
+                type="email"
+                placeholder="Email yang dapat dihubungi"
+                value={formData.emailContact}
+                onChange={handleChange}
+              />
               </div>
             </div>
 
