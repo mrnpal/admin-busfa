@@ -1,71 +1,38 @@
-# Getting Started with Create React App
+# Admin Busfa - Dashboard Admin Aplikasi Manajemen Alumni
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+📌 **Admin-Busfa** adalah aplikasi web berbasis React yang berfungsi sebagai **dashboard admin** untuk mengelola data alumni dan kegiatan di Pondok Pesantren Bustanul Faizin. Proyek ini merupakan bagian dari sistem informasi alumni berbasis mobile yang dikembangkan menggunakan metode Extreme Programming (XP).
 
-## Available Scripts
+## 🚀 Fitur Utama
 
-In the project directory, you can run:
+- 🔐 **Login Admin** menggunakan Firebase Authentication
+- ✅ **Verifikasi Pendaftaran Alumni**
+- 👤 **Manajemen Data Alumni**
+  - Tambah, edit, hapus data alumni
+- 📌 **Manajemen Kegiatan Alumni**
+  - Tambah, edit, hapus kegiatan
+- 🌐 **Firebase Firestore Integration**
+  - Realtime database untuk alumni dan kegiatan
+- 📁 **Firebase Storage**
+  - Upload dan kelola gambar kegiatan dan foto profil alumni
+- 📊 **Dashboard Ringkasan**
+  - Menampilkan data statistik alumni dan kegiatan
 
-### `npm start`
+## 🧰 Teknologi yang Digunakan
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **React.js** – Library UI utama
+- **Firebase** – Backend-as-a-Service (Authentication, Firestore, Storage)
+- **React Router DOM** – Navigasi antar halaman
+- **Tailwind CSS** – Styling modern dan responsif
+- **React Icons** – Ikon antarmuka pengguna
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🖼️ Cuplikan Antarmuka
 
-### `npm test`
+> 💻 *Tambahkan screenshot di sini (opsional) untuk menampilkan antarmuka aplikasi.*
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 📦 Instalasi Lokal
 
-### `npm run build`
+### 1. Clone repositori
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# admin-busfa
+```bash
+git clone https://github.com/mrnpal/admin-busfa.git
+cd admin-busfa
