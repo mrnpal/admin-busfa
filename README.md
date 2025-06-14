@@ -36,3 +36,8 @@
 ```bash
 git clone https://github.com/mrnpal/admin-busfa.git
 cd admin-busfa
+```
+### 2. Install dependencies
+```bash
+npm install
+
