@@ -25,9 +25,6 @@
 - **Tailwind CSS** – Styling modern dan responsif
 - **React Icons** – Ikon antarmuka pengguna
 
-## 🖼️ Cuplikan Antarmuka
-
-> 💻 *Tambahkan screenshot di sini (opsional) untuk menampilkan antarmuka aplikasi.*
 
 ## 📦 Instalasi Lokal
 
@@ -40,4 +37,25 @@ cd admin-busfa
 ### 2. Install dependencies
 ```bash
 npm install
+```
+### 3. Jalankan server
+```bash
+npm run start
+```
+### 4. Konfigurasi firebase
+```bash
+FIREBASE_API_KEY=your_api_key
+FIREBASE_AUTH_DOMAIN=your_auth_domain
+FIREBASE_PROJECT_ID=your_project_id
+FIREBASE_STORAGE_BUCKET=your_storage_bucket
+FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+FIREBASE_APP_ID=your_app_id
+```
+
+## 📚 Tentang Proyek
+Proyek ini merupakan bagian dari skripsi dengan judul:
+
+Pengembangan Aplikasi Manajemen Alumni Berbasis Mobile dengan Metode Extreme Programming pada Pondok Pesantren Bustanul Faizin
+
+📱 Aplikasi mobile dikembangkan menggunakan Flutter dan terintegrasi penuh dengan backend Firebase serta dashboard admin ini.
 
