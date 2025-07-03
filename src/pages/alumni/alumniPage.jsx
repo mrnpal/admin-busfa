@@ -17,10 +17,7 @@ import {
   FiX,
   FiChevronLeft,
   FiChevronRight,
-  FiMail,
-  FiPhone,
   FiMapPin,
-
   FiUser,
   FiSearch
 } from "react-icons/fi";
@@ -33,7 +30,9 @@ const AlumniPage = () => {
     email: "", 
     address: "", 
     phone: "", 
+    parentName: "",
     job: "", 
+    birthPlaceDate: "",
     graduationYear: ""
   });
   const [editingAlumni, setEditingAlumni] = useState(null);
@@ -54,7 +53,7 @@ const AlumniPage = () => {
     setIsLoading(true);
     try {
       const alumniSnapshot = await getDocs(collection(db, "alumni"));
-      const alumniVerifiedSnapshot = await getDocs(collection(db, "alumniVerified"));
+     
   
       const alumniData = alumniSnapshot.docs.map(doc => ({
         id: doc.id,
@@ -63,14 +62,9 @@ const AlumniPage = () => {
         ...doc.data()
       }));
   
-      const alumniVerifiedData = alumniVerifiedSnapshot.docs.map(doc => ({
-        id: doc.id,
-        collectionName: "alumniVerified",
-        verified: true,
-        ...doc.data()
-      }));
+      
   
-      setAlumni([...alumniData, ...alumniVerifiedData]);
+      setAlumni([...alumniData]);
       setCurrentPage(1);
     } catch (err) {
       setError("Gagal memuat data alumni. Silakan coba lagi.");
@@ -106,7 +100,7 @@ const AlumniPage = () => {
         id: id,
       });
       
-      setNewAlumni({ name: "", email: "", address: "", phone: "", job: "", graduationYear: "" });
+      setNewAlumni({ name: "", email: "", address: "", phone: "", job: "", graduationYear: "", birthPlaceDate: "", parentName: "" });
       await fetchAlumni();
     } catch (err) {
       setError("Gagal menambahkan alumni.");
@@ -262,19 +256,14 @@ const AlumniPage = () => {
                 required
               />
             </div>
-
             <div className="form-group">
-              <label>Email</label>
-              <div className="input-with-icon">
-                <FiMail className="input-icon" />
-                <input
-                  type="email"
-                  placeholder="email@contoh.com"
-                  value={newAlumni.email}
-                  onChange={(e) => setNewAlumni({...newAlumni, email: e.target.value})}
-                  required
-                />
-              </div>
+              <label>Tempat, Tanggal Lahir</label>
+              <input
+                type="text"
+                placeholder="Tempat, Tanggal Lahir"
+                value={newAlumni.birthPlaceDate}
+                onChange={(e) => setNewAlumni({...newAlumni, birthPlaceDate: e.target.value})}
+              />
             </div>
 
             <div className="form-group">
@@ -289,29 +278,21 @@ const AlumniPage = () => {
                 />
               </div>
             </div>
-
             <div className="form-group">
-              <label>Nomor Telepon</label>
+              <label>Orang Tua Wali</label>
               <div className="input-with-icon">
-                <FiPhone className="input-icon" />
+                {/* <FiMail className="input-icon" /> */}
                 <input
-                  type="tel"
-                  placeholder="08123456789"
-                  value={newAlumni.phone}
-                  onChange={(e) => setNewAlumni({...newAlumni, phone: e.target.value})}
+                  type="text"
+                  placeholder="Nama Ayah/Ibu"
+                  value={newAlumni.parentName}
+                  onChange={(e) => setNewAlumni({...newAlumni, parentName: e.target.value})}   
                 />
+                
               </div>
             </div>
 
-            <div className="form-group">
-              <label>Pekerjaan</label>
-              <input
-                type="text"
-                placeholder="Posisi pekerjaan"
-                value={newAlumni.job}
-                onChange={(e) => setNewAlumni({...newAlumni, job: e.target.value})}
-              />
-            </div>
+      
 
             <div className="form-group">
               <label>Tahun Lulus</label>
@@ -377,7 +358,9 @@ const AlumniPage = () => {
                       <th>No</th>
                       <th>Foto</th>
                       <th>Nama</th>
-                      <th>Email</th>
+                      <th>Tempat, Taggal Lahir</th>
+                      <th>Alamat</th>   
+                      <th>Nama Orang Tua Wali</th>
                       <th>Pekerjaan</th>
                       <th>Lulus</th>
                       <th>Status</th>
@@ -399,7 +382,11 @@ const AlumniPage = () => {
                             </div>
                           </td>
                           <td className="alumni-name">{a.name}</td>
-                          <td>{a.email}</td>
+                          <td>{a.birthPlaceDate || '-'}</td>
+                          <td>{a.address || '-'}</td>
+                          
+                          <td>{a.parentName || '-'}</td>
+                        
                           <td>{a.job || '-'}</td>
                           <td>{a.graduationYear || '-'}</td>
                           <td>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
 import { collection, addDoc, getDocs, deleteDoc, doc, Timestamp } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { 
   FiHome, 
   FiUsers, 
@@ -42,6 +43,7 @@ const JobPage = () => {
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [logoFile, setLogoFile] = useState(null);
 
   useEffect(() => {
     fetchJobs();
@@ -72,18 +74,27 @@ const JobPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    try {
-      const jobData = {
-        ...formData,
-        requirements: formData.requirements
-          .split('\n')
-          .filter((req) => req.trim() !== ''),
-        postedDate: Timestamp.now(),
-        deadline: Timestamp.fromDate(new Date(formData.deadline)),
-        companyLogo: formData.companyLogo || null,
-        salary: formData.salary || null,
-      };
+    let logoUrl = "";
 
+    if (logoFile) {
+      const storage = getStorage();
+      const storageRef = ref(storage, `jobs_images/${logoFile.name}_${Date.now()}`);
+      await uploadBytes(storageRef, logoFile);
+      logoUrl = await getDownloadURL(storageRef);
+    }
+
+    const jobData = {
+      ...formData,
+      companyLogo: logoUrl, 
+      requirements: formData.requirements
+        .split('\n')
+        .filter((req) => req.trim() !== ''),
+      postedDate: Timestamp.now(),
+      deadline: Timestamp.fromDate(new Date(formData.deadline)),
+      salary: formData.salary || null,
+    };
+
+    try {
       await addDoc(collection(db, 'jobs'), jobData);
       setFormData({
         title: '',
@@ -229,12 +240,11 @@ const JobPage = () => {
             </div>
 
             <div className="form-group">
-              <label>Logo Perusahaan (URL)</label>
+              <label>Logo Perusahaan</label>
               <input
-                name="companyLogo"
-                placeholder="https://contoh.com/logo.png (opsional)"
-                value={formData.companyLogo}
-                onChange={handleChange}
+                type="file"
+                accept="image/*"
+                onChange={e => setLogoFile(e.target.files[0])}
               />
             </div>
 
