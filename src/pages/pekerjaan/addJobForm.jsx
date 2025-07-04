@@ -412,6 +412,8 @@ const JobPage = () => {
                     <th>Lokasi</th>
                     <th>Batas Waktu</th>
                     <th>Gaji</th>
+                    <th>Kontak</th>
+                    <th>Email</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -438,6 +440,8 @@ const JobPage = () => {
                       <td>{job.location}</td>
                       <td>{job.formattedDeadline}</td>
                       <td>{job.salary || '-'}</td>
+                      <td>{job.phoneContact}</td>
+                      <td>{job.emailContact}</td>
                       <td className="action-buttons">
                         <button 
                           className="btn btn-danger"

@@ -136,7 +136,7 @@ const Dashboard = () => {
         <div className="stats-grid">
           <div 
             className="stat-card primary" 
-            onClick={() => handleCardClick("/alumni")}
+           
           >
             <h3>Total Alumni</h3>
             <p className="stat-value">{alumniCount + alumniVerifiedCount}</p>

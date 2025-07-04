@@ -26,14 +26,12 @@ import "./alumniPage.css";
 const AlumniPage = () => {
   const [alumni, setAlumni] = useState([]);
   const [newAlumni, setNewAlumni] = useState({
-    name: "", 
-    email: "", 
-    address: "", 
-    phone: "", 
-    parentName: "",
-    job: "", 
+    name: "",
+    address: "",
     birthPlaceDate: "",
-    graduationYear: ""
+    fatherName: "",
+    motherName: ""
+  
   });
   const [editingAlumni, setEditingAlumni] = useState(null);
   const [deletingAlumni, setDeletingAlumni] = useState(null);
@@ -224,7 +222,7 @@ const AlumniPage = () => {
       {/* Main Content */}
       <div className="main-content">
         <header className="main-header">
-          <h1>Manajemen Alumni</h1>
+          <h1>Tambah Data Alumni</h1>
           <div className="user-info">
             <span>Admin</span>
             <div className="user-avatar">
@@ -279,32 +277,29 @@ const AlumniPage = () => {
               </div>
             </div>
             <div className="form-group">
-              <label>Orang Tua Wali</label>
-              <div className="input-with-icon">
+              <label>Nama Ayah</label>
+             
                 {/* <FiMail className="input-icon" /> */}
                 <input
                   type="text"
-                  placeholder="Nama Ayah/Ibu"
-                  value={newAlumni.parentName}
-                  onChange={(e) => setNewAlumni({...newAlumni, parentName: e.target.value})}   
+                  placeholder="Nama Ayah"
+                  value={newAlumni.fatherName}
+                  onChange={(e) => setNewAlumni({...newAlumni, fatherName: e.target.value})}   
                 />
-                
-              </div>
+         
+              
             </div>
-
-      
-
             <div className="form-group">
-              <label>Tahun Lulus</label>
-              <input
-                type="number"
-                placeholder="Tahun lulus"
-                value={newAlumni.graduationYear}
-                onChange={(e) => setNewAlumni({...newAlumni, graduationYear: e.target.value})}
-                min="1900"
-                max={new Date().getFullYear()}
-              />
+             <label>Nama Ibu</label>
+                <input
+                  type="text"
+                  placeholder="Nama Ibu"
+                  value={newAlumni.motherName}
+                  onChange={(e) => setNewAlumni({...newAlumni, motherName: e.target.value})}   
+                />
+           
             </div>
+              
 
             <button 
               type="submit" 
@@ -356,14 +351,11 @@ const AlumniPage = () => {
                   <thead>
                     <tr>
                       <th>No</th>
-                      <th>Foto</th>
                       <th>Nama</th>
                       <th>Tempat, Taggal Lahir</th>
                       <th>Alamat</th>   
-                      <th>Nama Orang Tua Wali</th>
-                      <th>Pekerjaan</th>
-                      <th>Lulus</th>
-                      <th>Status</th>
+                      <th>Nama Ayah</th>
+                      <th>Nama Ibu</th>
                       <th>Aksi</th>
                     </tr>
                   </thead>
@@ -372,28 +364,15 @@ const AlumniPage = () => {
                       currentAlumni.map((a, index) => (
                         <tr key={`${a.collectionName}-${a.id}`}>
                           <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                          <td>
-                            <div className="avatar">
-                              {a.photoUrl ? (
-                                <img src={a.photoUrl} alt={a.name} />
-                              ) : (
-                                <FiUser className="avatar-icon" />
-                              )}
-                            </div>
-                          </td>
+                         
                           <td className="alumni-name">{a.name}</td>
                           <td>{a.birthPlaceDate || '-'}</td>
                           <td>{a.address || '-'}</td>
                           
-                          <td>{a.parentName || '-'}</td>
+                          <td>{a.fatherName || '-'}</td>
+                          <td>{a.motherName || '-'}</td>
                         
-                          <td>{a.job || '-'}</td>
-                          <td>{a.graduationYear || '-'}</td>
-                          <td>
-                            <span className={`status-badge ${a.verified ? 'verified' : 'unverified'}`}>
-                              {a.verified ? 'Terverifikasi' : 'Belum Verifikasi'}
-                            </span>
-                          </td>
+                          
                           <td className="action-buttons">
                             <button 
                               className="btn btn-edit"
@@ -490,15 +469,16 @@ const AlumniPage = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Email</label>
+                  <label>Tempat, Tanggal Lahir</label>
                   <input
-                    name="email"
-                    type="email"
-                    value={editingAlumni.email}
+                    name="birthPlaceDate"
+                    type="text"
+                    value={editingAlumni.birthPlaceDate}
                     onChange={handleEditChange}
-                    required
                   />
                 </div>
+
+                
 
                 <div className="form-group">
                   <label>Alamat</label>
@@ -510,37 +490,28 @@ const AlumniPage = () => {
                   />
                 </div>
 
-                <div className="form-group">
-                  <label>Nomor Telepon</label>
-                  <input
-                    name="phone"
-                    type="tel"
-                    value={editingAlumni.phone}
-                    onChange={handleEditChange}
-                  />
-                </div>
+                
 
                 <div className="form-group">
-                  <label>Pekerjaan</label>
+                  <label>Nama Ayah</label>
                   <input
-                    name="job"
+                    name="fatherName"
                     type="text"
-                    value={editingAlumni.job}
+                    value={editingAlumni.fatherName}
+                    onChange={handleEditChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Nama Ibu</label>
+                  <input
+                    name="motherName"
+                    type="text"
+                    value={editingAlumni.motherName}
                     onChange={handleEditChange}
                   />
                 </div>
 
-                <div className="form-group">
-                  <label>Tahun Lulus</label>
-                  <input
-                    name="graduationYear"
-                    type="number"
-                    value={editingAlumni.graduationYear}
-                    onChange={handleEditChange}
-                    min="1900"
-                    max={new Date().getFullYear()}
-                  />
-                </div>
+                
 
                 <div className="modal-buttons">
                   <button 
