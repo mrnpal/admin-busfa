@@ -255,7 +255,7 @@ const AlumniPage = () => {
                       <td>
                         <button 
                           className="delete-button"
-                          onClick={() => setDeletingAlumniVerified({ id: a.id, collectionName: "alumniVerified" })}
+                          onClick={() => setDeletingAlumniVerified({ id: a.name, collectionName: "alumniVerified" })}
                           disabled={isLoading}
                         >
                           Hapus
