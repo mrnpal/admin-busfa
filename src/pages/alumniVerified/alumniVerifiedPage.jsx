@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -15,7 +15,8 @@ import {
   FiMail,
   FiPhone,
   FiMapPin,
-  FiAward
+  FiAward,
+  FiX
 } from "react-icons/fi";
 import "./alumniVerifiedPage.css";
 
@@ -27,6 +28,8 @@ const AlumniPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [deletingAlumniVerified, setDeletingAlumniVerified] = useState(null);
 
   useEffect(() => {
     fetchAlumni();
@@ -66,6 +69,24 @@ const AlumniPage = () => {
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
+  const handleDelete = async () => {
+    setIsLoading(true);
+    try {
+      const {id, collectionName} = deletingAlumniVerified;
+      if (!id || !collectionName){
+        throw new Error ("Data tidak lengkap untuk penghapusan");
+      }
+      await deleteDoc(doc(db, collectionName, id));
+      setDeletingAlumniVerified(null);
+      await fetchAlumni();
+    }catch (err){
+      console.error("Gagal menghapus alumni:", err);
+      setError("Gagal menghapus alumni. Silakan coba lagi.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -147,6 +168,48 @@ const AlumniPage = () => {
             </div>
           )}
 
+          {/* Delete Confirmation Modal */}
+          {deletingAlumniVerified && (
+            <div className="modal-overlay">
+                        <div className="modal modal-sm">
+                          <div className="modal-header">
+                            <h3>Konfirmasi Hapus</h3>
+                            <button 
+                              className="modal-close"
+                              onClick={() => setDeletingAlumniVerified(null)}
+                            >
+                              <FiX />
+                            </button>
+                          </div>
+                          
+                          <div className="modal-body">
+                            <p>Anda yakin ingin menghapus alumni <strong>"{deletingAlumniVerified.id}"</strong>?</p>
+                            <p className="text-muted">Data yang dihapus tidak dapat dikembalikan.</p>
+                          </div>
+            
+                          <div className="modal-buttons">
+                            <button 
+                              className="btn btn-danger"
+                              onClick={handleDelete}
+                              disabled={isLoading}
+                            >
+                              {isLoading ? (
+                                <span className="loading-spinner"></span>
+                              ) : (
+                                "Ya, Hapus"
+                              )}
+                            </button>
+                            <button 
+                              className="btn btn-secondary"
+                              onClick={() => setDeletingAlumniVerified(null)}
+                            >
+                              Batal
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+          )}
+
           <div className="table-controls">
             <div className="search-box">
               <input
@@ -175,6 +238,7 @@ const AlumniPage = () => {
                   <th><FiPhone className="table-icon" /> Telepon</th>
                   <th><FiBriefcase className="table-icon" /> Pekerjaan</th>
                   <th><FiAward className="table-icon" /> Lulus</th>
+                  <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -188,6 +252,15 @@ const AlumniPage = () => {
                       <td>{a.phone || '-'}</td>
                       <td>{a.job || '-'}</td>
                       <td>{a.graduationYear}</td>
+                      <td>
+                        <button 
+                          className="delete-button"
+                          onClick={() => setDeletingAlumniVerified({ id: a.id, collectionName: "alumniVerified" })}
+                          disabled={isLoading}
+                        >
+                          Hapus
+                        </button>
+                      </td>
                     </tr>
                   ))
                 ) : (
