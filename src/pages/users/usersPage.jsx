@@ -18,9 +18,9 @@ import {
   FiAward,
   FiX
 } from "react-icons/fi";
-import "./alumniVerifiedPage.css";
+import "./usersPage.css";
 
-const AlumniPage = () => {
+const UsersPage = () => {
   const [alumni, setAlumni] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -29,7 +29,7 @@ const AlumniPage = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [deletingAlumniVerified, setDeletingAlumniVerified] = useState(null);
+  const [deletingusers, setDeletingusers] = useState(null);
 
   useEffect(() => {
     fetchAlumni();
@@ -37,7 +37,7 @@ const AlumniPage = () => {
 
   const fetchAlumni = async () => {
     try {
-      const snapshot = await getDocs(collection(db, "alumniVerified"));
+      const snapshot = await getDocs(collection(db, "users"));
       const data = snapshot.docs.map(doc => ({ 
         id: doc.id, 
         ...doc.data(),
@@ -74,12 +74,12 @@ const AlumniPage = () => {
   const handleDelete = async () => {
     setIsLoading(true);
     try {
-      const {id, collectionName} = deletingAlumniVerified;
+      const {id, collectionName} = deletingusers;
       if (!id || !collectionName){
         throw new Error ("Data tidak lengkap untuk penghapusan");
       }
       await deleteDoc(doc(db, collectionName, id));
-      setDeletingAlumniVerified(null);
+      setDeletingusers(null);
       await fetchAlumni();
     }catch (err){
       console.error("Gagal menghapus alumni:", err);
@@ -113,9 +113,9 @@ const AlumniPage = () => {
             </button>
           </li>
           <li>
-            <button onClick={() => navigate("/alumniVerified")} className="menu-item">
+            <button onClick={() => navigate("/users")} className="menu-item">
               <FiCheckCircle className="menu-icon" />
-              {!isSidebarCollapsed && <span>Alumni Terverifikasi</span>}
+              {!isSidebarCollapsed && <span>Users</span>}
             </button>
           </li>
           <li>
@@ -127,7 +127,7 @@ const AlumniPage = () => {
           <li>
             <button onClick={() => navigate("/verifikasi")} className="menu-item">
               <FiClipboard className="menu-icon" />
-              {!isSidebarCollapsed && <span>Verifikasi Alumni</span>}
+              {!isSidebarCollapsed && <span>Verifikasi Pengguna</span>}
             </button>
           </li>
           <li>
@@ -152,7 +152,7 @@ const AlumniPage = () => {
       {/* Main Content */}
       <div className="main-content">
         <header className="main-header">
-          <h1>Daftar Alumni Terverifikasi</h1>
+          <h1>Daftar Users</h1>
           <div className="user-info">
             <span>Admin</span>
             <div className="user-avatar">
@@ -169,21 +169,21 @@ const AlumniPage = () => {
           )}
 
           {/* Delete Confirmation Modal */}
-          {deletingAlumniVerified && (
+          {deletingusers && (
             <div className="modal-overlay">
                         <div className="modal modal-sm">
                           <div className="modal-header">
                             <h3>Konfirmasi Hapus</h3>
                             <button 
                               className="modal-close"
-                              onClick={() => setDeletingAlumniVerified(null)}
+                              onClick={() => setDeletingusers(null)}
                             >
                               <FiX />
                             </button>
                           </div>
                           
                           <div className="modal-body">
-                            <p>Anda yakin ingin menghapus alumni <strong>"{deletingAlumniVerified.id}"</strong>?</p>
+                            <p>Anda yakin ingin menghapus alumni <strong>"{deletingusers.id}"</strong>?</p>
                             <p className="text-muted">Data yang dihapus tidak dapat dikembalikan.</p>
                           </div>
             
@@ -201,7 +201,7 @@ const AlumniPage = () => {
                             </button>
                             <button 
                               className="btn btn-secondary"
-                              onClick={() => setDeletingAlumniVerified(null)}
+                              onClick={() => setDeletingusers(null)}
                             >
                               Batal
                             </button>
@@ -255,7 +255,7 @@ const AlumniPage = () => {
                       <td>
                         <button 
                           className="delete-button"
-                          onClick={() => setDeletingAlumniVerified({ id: a.name, collectionName: "alumniVerified" })}
+                          onClick={() => setDeletingusers({ id: a.name, collectionName: "users" })}
                           disabled={isLoading}
                         >
                           Hapus
@@ -316,4 +316,4 @@ const AlumniPage = () => {
   );
 };
 
-export default AlumniPage;
+export default UsersPage;

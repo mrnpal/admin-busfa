@@ -11,7 +11,7 @@ const Dashboard = () => {
   const [alumniCount, setAlumniCount] = useState(0);
   const [kegiatanCount, setKegiatanCount] = useState(0);
   const [pendingCount, setPendingCount] = useState(0);
-  const [alumniVerifiedCount, setAlumniVerifiedCount] = useState(0);
+  const [usersCount, setusersCount] = useState(0);
   const [pekerjaanCount, setPekerjaanCount] = useState(0);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
@@ -24,16 +24,16 @@ const Dashboard = () => {
     try {
       const alumniSnapshot = await getDocs(collection(db, "alumni"));
       const kegiatanSnapshot = await getDocs(collection(db, "kegiatan"));
-      const alumniVerifiedSnapshot = await getDocs(collection(db, "alumniVerified"));
+      const usersSnapshot = await getDocs(collection(db, "users"));
       const pekerjaanSnapshot = await getDocs(collection(db, "jobs"));
 
-      const pendingSnapshot = await getDocs(collection(db, "pendingAlumni"));
+      const pendingSnapshot = await getDocs(collection(db, "pendingUsers"));
 
       setAlumniCount(alumniSnapshot.size);
       setKegiatanCount(kegiatanSnapshot.size);
       setPendingCount(pendingSnapshot.size);
       setPekerjaanCount(pekerjaanSnapshot.size);
-      setAlumniVerifiedCount(alumniVerifiedSnapshot.size);
+      setusersCount(usersSnapshot.size);
     } catch (error) {
       console.error("Gagal mengambil data:", error);
     }
@@ -85,9 +85,9 @@ const Dashboard = () => {
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => navigate("/alumniVerified")} className="menu-item">
+                  <button onClick={() => navigate("/users")} className="menu-item">
                     <FiCheckCircle className="menu-icon" />
-                    {!isSidebarCollapsed && <span>Alumni Terverifikasi</span>}
+                    {!isSidebarCollapsed && <span>Users</span>}
                   </button>
                 </li>
                 <li>
@@ -99,7 +99,7 @@ const Dashboard = () => {
                 <li>
                   <button onClick={() => navigate("/verifikasi")} className="menu-item">
                     <FiClipboard className="menu-icon" />
-                    {!isSidebarCollapsed && <span>Verifikasi Alumni</span>}
+                    {!isSidebarCollapsed && <span>Verifikasi Pengguna</span>}
                   </button>
                 </li>
                 <li>
@@ -139,7 +139,7 @@ const Dashboard = () => {
            
           >
             <h3>Total Alumni</h3>
-            <p className="stat-value">{alumniCount + alumniVerifiedCount}</p>
+            <p className="stat-value">{alumniCount + usersCount}</p>
             <div className="stat-icon">
               <FiUsers size={24} />
             </div>
@@ -158,10 +158,10 @@ const Dashboard = () => {
           
           <div 
             className="stat-card success" 
-            onClick={() => handleCardClick("/alumniVerified")}
+            onClick={() => handleCardClick("/users")}
           >
-            <h3>Alumni Terverifikasi</h3>
-            <p className="stat-value">{alumniVerifiedCount}</p>
+            <h3>Users</h3>
+            <p className="stat-value">{usersCount}</p>
             <div className="stat-icon">
               <FiCheckCircle size={24} />
             </div>

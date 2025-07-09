@@ -159,9 +159,9 @@ const JobPage = () => {
             </button>
           </li>
           <li>
-            <button onClick={() => navigate("/alumniVerified")} className="menu-item">
+            <button onClick={() => navigate("/users")} className="menu-item">
               <FiCheckCircle className="menu-icon" />
-              {!isSidebarCollapsed && <span>Alumni Terverifikasi</span>}
+              {!isSidebarCollapsed && <span>Users</span>}
             </button>
           </li>
           <li>
@@ -173,7 +173,7 @@ const JobPage = () => {
           <li>
             <button onClick={() => navigate("/verifikasi")} className="menu-item">
               <FiClipboard className="menu-icon" />
-              {!isSidebarCollapsed && <span>Verifikasi Alumni</span>}
+              {!isSidebarCollapsed && <span>Verifikasi Pengguna</span>}
             </button>
           </li>
           <li>

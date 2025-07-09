@@ -22,7 +22,7 @@ const transporter = nodemailer.createTransport({
 
 // --- Fungsi: Kirim Email Verifikasi ke Alumni Baru ---
 exports.sendVerificationEmail = functions.firestore
-  .document("alumniVerified/{userId}")
+  .document("users/{userId}")
   .onCreate(async (snap, context) => {
     const data = snap.data();
     const email = data.email;
@@ -55,7 +55,7 @@ exports.notifyNewJob = functions.firestore
     const newJob = snap.data();
 
     try {
-      const usersSnapshot = await admin.firestore().collection("alumniVerified").get();
+      const usersSnapshot = await admin.firestore().collection("users").get();
       const tokens = usersSnapshot.docs
         .map(doc => doc.data().fcmToken)
         .filter(token => typeof token === "string" && token.length > 0);
@@ -97,7 +97,7 @@ exports.notifyNewActivity = functions.firestore
     const newActivity = snap.data();
 
     try {
-      const usersSnapshot = await admin.firestore().collection("alumniVerified").get();
+      const usersSnapshot = await admin.firestore().collection("users").get();
       const tokens = usersSnapshot.docs
         .map(doc => doc.data().fcmToken)
         .filter(token => typeof token === "string" && token.length > 0);

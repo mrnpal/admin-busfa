@@ -48,8 +48,8 @@ const MapsPage = () => {
   }, []);
 
   const fetchAlumni = async () => {
-    const alumniVerifiedSnapshot = await getDocs(collection(db, "alumniVerified"));
-    const alumniData = alumniVerifiedSnapshot.docs.map((doc) => {
+    const usersSnapshot = await getDocs(collection(db, "users"));
+    const alumniData = usersSnapshot.docs.map((doc) => {
       const data = doc.data();
       return {
         id: doc.id,
@@ -87,9 +87,9 @@ const MapsPage = () => {
             </button>
           </li>
           <li>
-            <button onClick={() => navigate("/alumniVerified")} className="menu-item">
+            <button onClick={() => navigate("/users")} className="menu-item">
               <FiCheckCircle className="menu-icon" />
-              {!isSidebarCollapsed && <span>Alumni Terverifikasi</span>}
+              {!isSidebarCollapsed && <span>Users</span>}
             </button>
           </li>
           <li>
@@ -101,7 +101,7 @@ const MapsPage = () => {
           <li>
             <button onClick={() => navigate("/verifikasi")} className="menu-item">
               <FiClipboard className="menu-icon" />
-              {!isSidebarCollapsed && <span>Verifikasi Alumni</span>}
+              {!isSidebarCollapsed && <span>Verifikasi Pengguna</span>}
             </button>
           </li>
           <li>

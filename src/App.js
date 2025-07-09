@@ -4,7 +4,7 @@ import AlumniPage from "./pages/alumni/alumniPage";
 import KegiatanPage from "./pages/kegiatan/kegiatanPage";
 import Login from "./pages/login/loginPage";
 import VerifyAlumniPage from "./pages/verifikasiAlumni/verifikasiAlumni";
-import AlumniVerifiedPage from "./pages/alumniVerified/alumniVerifiedPage";
+import UsersPage from "./pages/users/usersPage";
 import JobPage from "./pages/pekerjaan/addJobForm";
 import ProtectedRoute from "./services/ProtectedRoute"; 
 import MapsPage from "./pages/map/mapsPage";
@@ -54,10 +54,10 @@ function App() {
         />
 
         <Route
-          path="/alumniVerified"
+          path="/users"
           element={
             <ProtectedRoute>
-              <AlumniVerifiedPage />
+              <UsersPage />
             </ProtectedRoute>
           }
         />

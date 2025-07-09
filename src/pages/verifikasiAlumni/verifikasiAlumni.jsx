@@ -6,23 +6,23 @@ import { FiCheck, FiX, FiUser, FiMail, FiHome, FiPhone, FiBriefcase, FiCalendar,
 import "./verifikasiAlumni.css";
 
 const VerifikasiAlumniPage = () => {
-  const [pendingAlumni, setPendingAlumni] = useState([]);
+  const [pendingUsers, setpendingUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchPendingAlumni();
+    fetchpendingUsers();
   }, []);
 
-  const fetchPendingAlumni = async () => {
+  const fetchpendingUsers = async () => {
     try {
-      const snapshot = await getDocs(collection(db, "pendingAlumni"));
+      const snapshot = await getDocs(collection(db, "pendingUsers"));
       const data = snapshot.docs.map((doc) => ({
         id: doc.id, 
         ...doc.data(),
       }));
-      setPendingAlumni(data);
+      setpendingUsers(data);
     } catch (error) {
       console.error("Error fetching pending alumni:", error);
     }
@@ -37,13 +37,13 @@ const VerifikasiAlumniPage = () => {
       };
 
       await Promise.all([
-        setDoc(doc(db, "alumniVerified", alumni.id), alumniData),
-        deleteDoc(doc(db, "pendingAlumni", alumni.id)),
+        setDoc(doc(db, "users", alumni.id), alumniData),
+        deleteDoc(doc(db, "pendingUsers", alumni.id)),
       ]);
       
-      fetchPendingAlumni();
+      fetchpendingUsers();
     } catch (error) {
-      console.error("Gagal memverifikasi alumni:", error);
+      console.error("Gagal memVerifikasi Pengguna:", error);
     } finally {
       setLoading(false);
     }
@@ -51,8 +51,8 @@ const VerifikasiAlumniPage = () => {
 
   const handleReject = async (alumniId) => {
     try {
-      await deleteDoc(doc(db, "pendingAlumni", alumniId));
-      fetchPendingAlumni();
+      await deleteDoc(doc(db, "pendingUsers", alumniId));
+      fetchpendingUsers();
     } catch (error) {
       console.error("Gagal menolak alumni:", error);
     }
@@ -86,9 +86,9 @@ const VerifikasiAlumniPage = () => {
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => navigate("/alumniVerified")} className="menu-item">
+                  <button onClick={() => navigate("/users")} className="menu-item">
                     <FiCheckCircle className="menu-icon" />
-                    {!isSidebarCollapsed && <span>Alumni Terverifikasi</span>}
+                    {!isSidebarCollapsed && <span>Users</span>}
                   </button>
                 </li>
                 <li>
@@ -100,7 +100,7 @@ const VerifikasiAlumniPage = () => {
                 <li>
                   <button onClick={() => navigate("/verifikasi")} className="menu-item">
                     <FiClipboard className="menu-icon" />
-                    {!isSidebarCollapsed && <span>Verifikasi Alumni</span>}
+                    {!isSidebarCollapsed && <span>Verifikasi Pengguna</span>}
                   </button>
                 </li>
                 <li>
@@ -125,7 +125,7 @@ const VerifikasiAlumniPage = () => {
       {/* Main Content */}
       <div className="main-content">
         <header className="main-header">
-          <h1>Verifikasi Alumni</h1>
+          <h1>Verifikasi Pengguna</h1>
           <div className="user-info">
             <span>Admin</span>
             <div className="user-avatar">
@@ -135,7 +135,7 @@ const VerifikasiAlumniPage = () => {
         </header>
 
         <div className="content-card">
-          {pendingAlumni.length === 0 ? (
+          {pendingUsers.length === 0 ? (
             <div className="empty-state">
               <img 
                 src="1.jpg"
@@ -160,7 +160,7 @@ const VerifikasiAlumniPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {pendingAlumni.map((alumni) => (
+                  {pendingUsers.map((alumni) => (
                     <tr key={alumni.id}>
                       <td data-label="Nama">{alumni.name}</td>
                       <td data-label="Email">{alumni.email}</td>
