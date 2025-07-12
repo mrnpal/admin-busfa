@@ -225,98 +225,6 @@
   font-size: 1rem;
 }
 
-/* Sidebar */
-.sidebar {
-  width: 250px;
-  min-width: 250px;
-  transition: width 0.2s;
-}
-
-@media (max-width: 768px) {
-  .dashboard-container {
-    flex-direction: column;
-  }
-  .sidebar {
-    width: 100%;
-    min-width: 0;
-    flex-direction: row;
-    padding: 12px 0;
-    position: static;
-  }
-  .sidebar ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 0 8px;
-  }
-  .sidebar button,
-  .logout-button {
-    width: auto;
-    padding: 8px 12px;
-    font-size: 0.95rem;
-    margin: 0;
-  }
-}
-
-/* Main Content */
-.main-content {
-  padding: 24px 16px;
-}
-
-@media (max-width: 600px) {
-  .main-content {
-    padding: 12px 4px;
-  }
-}
-
-/* Tabel Responsif */
-.table-responsive {
-  overflow-x: auto;
-}
-
-.alumni-table {
-  width: 100%;
-  min-width: 600px;
-  font-size: 0.95rem;
-}
-
-@media (max-width: 600px) {
-  .alumni-table th,
-  .alumni-table td {
-    padding: 8px 6px;
-    font-size: 0.9rem;
-  }
-}
-
-/* Form Grid */
-.form-grid {
-  grid-template-columns: 1fr;
-  gap: 10px;
-  padding: 12px;
-}
-
-@media (min-width: 600px) {
-  .form-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    padding: 20px;
-  }
-}
-
-/* Modal */
-.modal-content {
-  width: 95vw;
-  max-width: 350px;
-  padding: 16px 8px;
-}
-
-@media (min-width: 600px) {
-  .modal-content {
-    width: 400px;
-    padding: 20px;
-  }
-}
-
 /* Responsive Styles */
 @media (max-width: 768px) {
   .form-grid {
@@ -362,14 +270,46 @@
   }
 }
 
-@media (max-width: 480px) {
-  .action-buttons {
-    flex-direction: column;
-    gap: 0.5rem;
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
   }
   
-  .btn-danger {
-    width: 100%;
-    justify-content: center;
+  .data-table {
+    display: block;
+  }
+  
+  .data-table thead {
+    display: none;
+  }
+  
+  .data-table tr {
+    display: block;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .data-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--light-gray);
+  }
+  
+  .data-table td::before {
+    content: attr(data-label);
+    font-weight: 500;
+    color: var(--primary-color);
+    margin-right: 1rem;
+  }
+  
+  .data-table td:last-child {
+    border-bottom: none;
+  }
+  
+  .action-buttons {
+    justify-content: flex-end;
   }
 }
