@@ -29,8 +29,10 @@ const AlumniPage = () => {
     name: "",
     address: "",
     birthPlaceDate: "",
-    fatherName: "",
-    motherName: ""
+    parentName: "",
+    dateEntry:"",
+    education: "",
+
   
   });
   const [editingAlumni, setEditingAlumni] = useState(null);
@@ -98,7 +100,7 @@ const AlumniPage = () => {
         id: id,
       });
       
-      setNewAlumni({ name: "", email: "", address: "", phone: "", job: "", graduationYear: "", birthPlaceDate: "", parentName: "" });
+      setNewAlumni({ name: "", parentName: "", address: "", dateEntry: "", education: "", birthPlaceDate: "" });
       await fetchAlumni();
     } catch (err) {
       setError("Gagal menambahkan alumni.");
@@ -263,7 +265,36 @@ const AlumniPage = () => {
                 onChange={(e) => setNewAlumni({...newAlumni, birthPlaceDate: e.target.value})}
               />
             </div>
+            <div className="form-group">
+              <label>Pendidikan</label>
+              <input
+                type="text"
+                placeholder="Pendidikan"
+                value={newAlumni.education}
+                onChange={(e) => setNewAlumni({...newAlumni, education: e.target.value})}
+              />
+            </div>
+            <div className="form-group">
+              <label>Tanggal Masuk</label>
+              <input
+                type="date"
+                placeholder="Tanggal Masuk"
+                value={newAlumni.dateEntry}
+                onChange={(e) => setNewAlumni({...newAlumni, dateEntry: e.target.value})}
+              />
+            </div>
 
+            
+            <div className="form-group">
+              <label>Nama Orang Tua</label>
+             
+                <input
+                  type="text"
+                  placeholder="Nama Orang Tua"
+                  value={newAlumni.parentName}
+                  onChange={(e) => setNewAlumni({...newAlumni, parentName: e.target.value})}   
+                />
+            </div>
             <div className="form-group">
               <label>Alamat</label>
               <div className="input-with-icon">
@@ -276,29 +307,7 @@ const AlumniPage = () => {
                 />
               </div>
             </div>
-            <div className="form-group">
-              <label>Nama Ayah</label>
-             
-                {/* <FiMail className="input-icon" /> */}
-                <input
-                  type="text"
-                  placeholder="Nama Ayah"
-                  value={newAlumni.fatherName}
-                  onChange={(e) => setNewAlumni({...newAlumni, fatherName: e.target.value})}   
-                />
-         
-              
-            </div>
-            <div className="form-group">
-             <label>Nama Ibu</label>
-                <input
-                  type="text"
-                  placeholder="Nama Ibu"
-                  value={newAlumni.motherName}
-                  onChange={(e) => setNewAlumni({...newAlumni, motherName: e.target.value})}   
-                />
            
-            </div>
               
 
             <button 
@@ -353,9 +362,10 @@ const AlumniPage = () => {
                       <th>No</th>
                       <th>Nama</th>
                       <th>Tempat, Taggal Lahir</th>
+                      <th>Pendidikan</th>
+                      <th>Tanggal Masuk</th>
+                      <th>Nama Orang Tua</th>
                       <th>Alamat</th>   
-                      <th>Nama Ayah</th>
-                      <th>Nama Ibu</th>
                       <th>Aksi</th>
                     </tr>
                   </thead>
@@ -367,10 +377,12 @@ const AlumniPage = () => {
                          
                           <td className="alumni-name">{a.name}</td>
                           <td>{a.birthPlaceDate || '-'}</td>
+                          <td>{a.education || '-'}</td>
+                          <td>{a.dateEntry || '-'}</td>
+                          <td>{a.parentName || '-'}</td>
                           <td>{a.address || '-'}</td>
                           
-                          <td>{a.fatherName || '-'}</td>
-                          <td>{a.motherName || '-'}</td>
+                    
                         
                           
                           <td className="action-buttons">
@@ -478,7 +490,33 @@ const AlumniPage = () => {
                   />
                 </div>
 
-                
+                <div className="form-group">
+                  <label>Pendidikan</label>
+                  <input
+                    name="pendidikan"
+                    type="text"
+                    value={editingAlumni.education}
+                    onChange={handleEditChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Tanggal Masuk</label>
+                  <input
+                    name="dateEntry"
+                    type="text"
+                    value={editingAlumni.dateEntry}
+                    onChange={handleEditChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Nama Orang Tua</label>
+                  <input
+                    name="parentName"
+                    type="text"
+                    value={editingAlumni.parentName}
+                    onChange={handleEditChange}
+                  />
+                </div>
 
                 <div className="form-group">
                   <label>Alamat</label>
@@ -489,30 +527,6 @@ const AlumniPage = () => {
                     onChange={handleEditChange}
                   />
                 </div>
-
-                
-
-                <div className="form-group">
-                  <label>Nama Ayah</label>
-                  <input
-                    name="fatherName"
-                    type="text"
-                    value={editingAlumni.fatherName}
-                    onChange={handleEditChange}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Nama Ibu</label>
-                  <input
-                    name="motherName"
-                    type="text"
-                    value={editingAlumni.motherName}
-                    onChange={handleEditChange}
-                  />
-                </div>
-
-                
-
                 <div className="modal-buttons">
                   <button 
                     type="submit" 
