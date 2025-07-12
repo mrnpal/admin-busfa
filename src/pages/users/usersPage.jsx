@@ -46,7 +46,7 @@ const UsersPage = () => {
       setAlumni(data);
       setCurrentPage(1);
     } catch (err) {
-      setError("Gagal memuat data alumni. Silakan coba lagi.");
+      setError("Gagal memuat data user. Silakan coba lagi.");
       console.error("Error fetching alumni:", err);
     }
   };
@@ -82,8 +82,8 @@ const UsersPage = () => {
       setDeletingusers(null);
       await fetchAlumni();
     }catch (err){
-      console.error("Gagal menghapus alumni:", err);
-      setError("Gagal menghapus alumni. Silakan coba lagi.");
+      console.error("Gagal menghapus user:", err);
+      setError("Gagal menghapus user. Silakan coba lagi.");
     } finally {
       setIsLoading(false);
     }
@@ -183,7 +183,7 @@ const UsersPage = () => {
                           </div>
                           
                           <div className="modal-body">
-                            <p>Anda yakin ingin menghapus alumni <strong>"{deletingusers.id}"</strong>?</p>
+                            <p>Anda yakin ingin menghapus user <strong>"{deletingusers.id}"</strong>?</p>
                             <p className="text-muted">Data yang dihapus tidak dapat dikembalikan.</p>
                           </div>
             
@@ -214,7 +214,7 @@ const UsersPage = () => {
             <div className="search-box">
               <input
                 type="text"
-                placeholder="Cari alumni..."
+                placeholder="Cari user..."
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value);
@@ -222,7 +222,7 @@ const UsersPage = () => {
                 }}
               />
               <span className="search-results">
-                {filteredAlumni.length} alumni ditemukan
+                {filteredAlumni.length} user ditemukan
               </span>
             </div>
           </div>
