@@ -27,6 +27,7 @@ const AlumniPage = () => {
   const [alumni, setAlumni] = useState([]);
   const [newAlumni, setNewAlumni] = useState({
     name: "",
+    indukNumber: "",
     address: "",
     birthPlaceDate: "",
     parentName: "",
@@ -42,6 +43,7 @@ const AlumniPage = () => {
   const [error, setError] = useState(null);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedAlumni, setSelectedAlumni] = useState(null);
   const itemsPerPage = 10;
   const navigate = useNavigate();
 
@@ -100,7 +102,7 @@ const AlumniPage = () => {
         id: id,
       });
       
-      setNewAlumni({ name: "", parentName: "", address: "", dateEntry: "", education: "", birthPlaceDate: "" });
+      setNewAlumni({ name: "",indukNumber:"",  parentName: "", address: "", dateEntry: "", education: "", birthPlaceDate: "" });
       await fetchAlumni();
     } catch (err) {
       setError("Gagal menambahkan alumni.");
@@ -257,6 +259,16 @@ const AlumniPage = () => {
               />
             </div>
             <div className="form-group">
+              <label>Nomor Induk</label>
+              <input
+                type="number"
+                placeholder="Nomor Induk"
+                value={newAlumni.indukNumber}
+                onChange={(e) => setNewAlumni({...newAlumni, indukNumber: e.target.value})}
+                required
+              />
+            </div>
+            <div className="form-group">
               <label>Tempat, Tanggal Lahir</label>
               <input
                 type="text"
@@ -267,12 +279,17 @@ const AlumniPage = () => {
             </div>
             <div className="form-group">
               <label>Pendidikan</label>
-              <input
-                type="text"
-                placeholder="Pendidikan"
+              <select
+                name="education"
                 value={newAlumni.education}
-                onChange={(e) => setNewAlumni({...newAlumni, education: e.target.value})}
-              />
+                onChange={e => setNewAlumni({ ...newAlumni, education: e.target.value })}
+                required
+                className="form-input"
+              >
+                <option value="">Pilih Pendidikan</option>
+                <option value="MA">MA</option>
+                <option value="MTS">MTS</option>
+              </select>
             </div>
             <div className="form-group">
               <label>Tanggal Masuk</label>
@@ -361,6 +378,7 @@ const AlumniPage = () => {
                     <tr>
                       <th>No</th>
                       <th>Nama</th>
+                      <th>Nomor Induk</th>
                       <th>Tempat, Taggal Lahir</th>
                       <th>Pendidikan</th>
                       <th>Tanggal Masuk</th>
@@ -372,30 +390,30 @@ const AlumniPage = () => {
                   <tbody>
                     {currentAlumni.length > 0 ? (
                       currentAlumni.map((a, index) => (
-                        <tr key={`${a.collectionName}-${a.id}`}>
-                          <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                         
-                          <td className="alumni-name">{a.name}</td>
-                          <td>{a.birthPlaceDate || '-'}</td>
-                          <td>{a.education || '-'}</td>
-                          <td>{a.dateEntry || '-'}</td>
-                          <td>{a.parentName || '-'}</td>
-                          <td>{a.address || '-'}</td>
-                          
-                    
-                        
-                          
-                          <td className="action-buttons">
+                        <tr
+                          key={`${a.collectionName}-${a.id}`}
+                          onClick={() => setSelectedAlumni(a)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <td data-label="No">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                          <td data-label="Nama" className="alumni-name">{a.name}</td>
+                          <td data-label="Nomor Induk">{a.indukNumber || '-'}</td>
+                          <td data-label="Tempat, Tanggal Lahir">{a.birthPlaceDate || '-'}</td>
+                          <td data-label="Pendidikan">{a.education || '-'}</td>
+                          <td data-label="Tanggal Masuk">{a.dateEntry || '-'}</td>
+                          <td data-label="Nama Orang Tua">{a.parentName || '-'}</td>
+                          <td data-label="Alamat" className="alamat-col">{a.address || '-'}</td>
+                          <td data-label="Aksi" className="action-buttons">
                             <button 
                               className="btn btn-edit"
-                              onClick={() => setEditingAlumni(a)}
+                              onClick={e => { e.stopPropagation(); setEditingAlumni(a); }}
                             >
                               <FiEdit2 className="btn-icon" />
                               Edit
                             </button>
                             <button 
                               className="btn btn-danger"
-                              onClick={() => setDeletingAlumni(a)}
+                              onClick={e => { e.stopPropagation(); setDeletingAlumni(a); }}
                             >
                               <FiTrash2 className="btn-icon" />
                               Hapus
@@ -405,7 +423,7 @@ const AlumniPage = () => {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="8" className="empty-table">
+                        <td colSpan="9" className="empty-table">
                           {searchTerm ? 
                             "Tidak ditemukan alumni yang sesuai dengan pencarian" : 
                             "Tidak ada data alumni yang tersedia"}
@@ -588,6 +606,34 @@ const AlumniPage = () => {
                   onClick={() => setDeletingAlumni(null)}
                 >
                   Batal
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal Detail Alumni */}
+        {selectedAlumni && (
+          <div className="modal-overlay">
+            <div className="modal modal-lg">
+              <div className="modal-header">
+                <h3>Detail Alumni</h3>
+                <button className="modal-close" onClick={() => setSelectedAlumni(null)}>
+                  <FiX />
+                </button>
+              </div>
+              <div className="modal-body">
+                <p><strong>Nama:</strong> {selectedAlumni.name}</p>
+                <p><strong>Nomor Induk:</strong> {selectedAlumni.indukNumber}</p>
+                <p><strong>Tempat, Tanggal Lahir:</strong> {selectedAlumni.birthPlaceDate || '-'}</p>
+                <p><strong>Pendidikan:</strong> {selectedAlumni.education || '-'}</p>
+                <p><strong>Tanggal Masuk:</strong> {selectedAlumni.dateEntry || '-'}</p>
+                <p><strong>Nama Orang Tua:</strong> {selectedAlumni.parentName || '-'}</p>
+                <p><strong>Alamat:</strong> {selectedAlumni.address || '-'}</p>
+              </div>
+              <div className="modal-buttons">
+                <button className="btn btn-secondary" onClick={() => setSelectedAlumni(null)}>
+                  Tutup
                 </button>
               </div>
             </div>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, getDocs, setDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
-import { FiCheck, FiX, FiUser, FiHome, FiPhone, FiBriefcase, FiCalendar, FiLogOut, FiMapPin, FiClipboard, FiCheckCircle, FiUsers, FiBookOpen } from "react-icons/fi";
+import { FiCheck, FiX, FiUser, FiHome, FiPhone, FiBriefcase, FiCalendar, FiLogOut, FiMapPin, FiClipboard, FiCheckCircle, FiUsers } from "react-icons/fi";
 import "./verifikasiAlumni.css";
 
 const VerifikasiAlumniPage = () => {
@@ -151,14 +151,14 @@ const VerifikasiAlumniPage = () => {
                 <thead>
                   <tr>
                     <th><FiUser className="table-icon" /> Nama</th>
-                    {/* <th><FiMail className="table-icon" /> Email</th> */}
-                    <th><FiHome className="table-icon" /> Alamat</th>
+                    <th><FiBriefcase className="table-icon" /> Email</th>
+                    {/* <th><FiHome className="table-icon" /> Alamat</th> */}
                     <th><FiPhone className="table-icon" /> Telepon</th>
-                    <th><FiUsers className="table-icon" /> Orang Tua</th>
+                    {/* <th><FiUsers className="table-icon" /> Orang Tua</th>
                     <th><FiBookOpen className="table-icon" /> Pendidikan</th>
                     <th><FiCalendar className="table-icon" /> Tahun Masuk</th>
                     <th><FiCalendar className="table-icon" /> Tahun Lulus</th>
-                    <th><FiBriefcase className="table-icon" /> Pekerjaan</th>
+                    <th><FiBriefcase className="table-icon" /> Pekerjaan</th> */}
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -166,14 +166,14 @@ const VerifikasiAlumniPage = () => {
                   {pendingUsers.map((alumni) => (
                     <tr key={alumni.id}>
                       <td data-label="Nama">{alumni.name}</td>
-                      {/* <td data-label="Email">{alumni.email}</td> */}
-                      <td data-label="Alamat">{alumni.address || '-'}</td>
+                      <td data-label="Email">{alumni.email}</td>
+                      {/* <td data-label="Alamat">{alumni.address || '-'}</td> */}
                       <td data-label="Telepon">{alumni.phone || '-'}</td>
-                      <td data-label="Orang Tua">{alumni.parentName || '-'}</td>
+                      {/* <td data-label="Orang Tua">{alumni.parentName || '-'}</td>
                       <td data-label="Pendidikan">{alumni.education || '-'}</td>
                       <td data-label="Tahun Masuk">{alumni.dateEntry || '-'}</td>
                       <td data-label="Tahun Lulus">{alumni.graduationYear || '-'}</td>
-                      <td data-label="Pekerjaan">{alumni.job || '-'}</td>
+                      <td data-label="Pekerjaan">{alumni.job || '-'}</td> */}
                       <td data-label="Aksi" className="action-buttons">
                         <button
                           className="btn btn-verify"

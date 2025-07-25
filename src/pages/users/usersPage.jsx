@@ -153,6 +153,7 @@ const UsersPage = () => {
                 </div>
                 <div className="modal-body">
                   <p><strong>Nama:</strong> {selectedUser.name}</p>
+                  <p><strong>Nomor Induk:</strong>{selectedUser.indukNumber}</p>
                   <p><strong>Email:</strong> {selectedUser.email}</p>
                   <p><strong>Tempat, Tanggal Lahir:</strong> {selectedUser.birthPlaceDate || '-'}</p>
                   <p><strong>Pendidikan:</strong> {selectedUser.education || '-'}</p>
@@ -191,6 +192,7 @@ const UsersPage = () => {
                 <tr>
                   <th>No</th>
                   <th>Nama</th>
+                  <th>NIS</th>
                   <th><FiMail className="table-icon" /> Email</th>
                   <th><FiCalendar className="table-icon" /> TTL</th>
                   <th><FiBookOpen className="table-icon" /> Pendidikan</th>
@@ -209,6 +211,7 @@ const UsersPage = () => {
                     <tr key={a.id} onClick={() => handleRowClick(a)} style={{ cursor: "pointer" }}>
                       <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                       <td className="alumni-name">{a.name}</td>
+                      <td>{a.indukNumber}</td>
                       <td>{a.email}</td>
                       <td>{a.birthPlaceDate || '-'}</td>
                       <td>{a.education || '-'}</td>
