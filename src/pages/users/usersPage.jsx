@@ -130,7 +130,7 @@ const UsersPage = () => {
                   <button className="modal-close" onClick={() => setDeletingusers(null)}><FiX /></button>
                 </div>
                 <div className="modal-body">
-                  <p>Anda yakin ingin menghapus user <strong>"{deletingusers.id}"</strong>?</p>
+                  <p>Anda yakin ingin menghapus user <strong>"{deletingusers.name}"</strong>?</p>
                   <p className="text-muted">Data yang dihapus tidak dapat dikembalikan.</p>
                 </div>
                 <div className="modal-buttons">
@@ -226,7 +226,7 @@ const UsersPage = () => {
                           className="delete-button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setDeletingusers({ id: a.id, collectionName: "users" });
+                            setDeletingusers({ id: a.id, collectionName: "users", name: a.name });
                           }}
                           disabled={isLoading}
                         >

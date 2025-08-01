@@ -120,9 +120,7 @@ const Login = () => {
               )}
             </button>
 
-            <div className="login-footer">
-              <p>Lupa password? <a href="/reset-password">Reset di sini</a></p>
-            </div>
+            
           </form>
         </div>
       </div>

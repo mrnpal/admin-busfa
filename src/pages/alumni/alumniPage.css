@@ -133,6 +133,57 @@
   font-size: 1.2rem;
   cursor: pointer;
 }
+.pagination-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 8px;
+  white-space: nowrap;
+}
+
+.page-numbers-scroll {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.page-numbers-scroll::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.pagination-button {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.pagination-button.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-text {
+  margin: 0 4px;
+}
+
+@media (max-width: 600px) {
+  .btn-text {
+    display: none; /* hide text for smaller screen */
+  }
+}
+
 
 /* ==== Form Grid ==== */
 .form-grid {

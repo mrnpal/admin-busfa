@@ -55,8 +55,7 @@ const AlumniPage = () => {
     setIsLoading(true);
     try {
       const alumniSnapshot = await getDocs(collection(db, "alumni"));
-     
-  
+    
       const alumniData = alumniSnapshot.docs.map(doc => ({
         id: doc.id,
         collectionName: "alumni",
@@ -64,8 +63,9 @@ const AlumniPage = () => {
         ...doc.data()
       }));
   
-      
-  
+      // Urutkan descending berdasarkan createdAt
+      alumniData.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
       setAlumni([...alumniData]);
       setCurrentPage(1);
     } catch (err) {
@@ -77,8 +77,9 @@ const AlumniPage = () => {
   };
 
   const getCurrentPageData = () => {
+    //pencarian alumni berdasarkan nama, nomor induk, nama orang tua, dan alamat
     const filteredData = alumni.filter((a) =>
-      `${a.name} ${a.email} ${a.job} ${a.graduationYear}`.toLowerCase().includes(searchTerm.toLowerCase())
+      `${a.name} ${a.indukNumber} ${a.parentName} ${a.address}`.toLowerCase().includes(searchTerm.toLowerCase())
     );
     
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -95,14 +96,27 @@ const AlumniPage = () => {
   const handleAddAlumni = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
+
     try {
+      // Cek apakah nomor induk sudah ada
+      const isDuplicate = alumni.some(
+        (a) => String(a.indukNumber).trim() === String(newAlumni.indukNumber).trim()
+      );
+      if (isDuplicate) {
+        setError("Nomor Induk sudah terdaftar. Silakan gunakan nomor lain.");
+        setIsLoading(false);
+        return;
+      }
+
       const id = uuidv4();
       await setDoc(doc(db, "alumni", id), {
         ...newAlumni,
         id: id,
+        createdAt: Date.now(),
       });
       
-      setNewAlumni({ name: "",indukNumber:"",  parentName: "", address: "", dateEntry: "", education: "", birthPlaceDate: "" });
+      setNewAlumni({ name: "", indukNumber: "", parentName: "", address: "", dateEntry: "", education: "", birthPlaceDate: "" });
       await fetchAlumni();
     } catch (err) {
       setError("Gagal menambahkan alumni.");
@@ -163,6 +177,7 @@ const AlumniPage = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
+  
   return (
     <div className={`dashboard-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
       {/* Sidebar */}
@@ -351,7 +366,7 @@ const AlumniPage = () => {
                 <FiSearch className="input-icon" />
                 <input
                   type="text"
-                  placeholder="Cari alumni berdasarkan nama, email, pekerjaan..."
+                  placeholder="Cari alumni berdasarkan nama, nomor induk, nama orang tua, dan alamat"
                   value={searchTerm}
                   onChange={(e) => {
                     setSearchTerm(e.target.value);
@@ -372,6 +387,7 @@ const AlumniPage = () => {
             </div>
           ) : (
             <>
+            
               <div className="responsive-table-container">
                 <table className="data-table">
                   <thead>
@@ -436,17 +452,17 @@ const AlumniPage = () => {
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="pagination">
+                <div className="pagination-wrapper">
                   <button 
                     onClick={() => goToPage(currentPage - 1)} 
                     disabled={currentPage === 1}
                     className="pagination-button"
                   >
-                    <FiChevronLeft className="pagination-icon" />
-                    Sebelumnya
+                    <FiChevronLeft />
+                    <span className="btn-text">Sebelumnya</span>
                   </button>
-                  
-                  <div className="page-numbers">
+
+                  <div className="page-numbers-scroll">
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                       <button
                         key={page}
@@ -457,17 +473,18 @@ const AlumniPage = () => {
                       </button>
                     ))}
                   </div>
-                  
+
                   <button 
                     onClick={() => goToPage(currentPage + 1)} 
                     disabled={currentPage === totalPages}
                     className="pagination-button"
                   >
-                    Selanjutnya
-                    <FiChevronRight className="pagination-icon" />
+                    <span className="btn-text">Selanjutnya</span>
+                    <FiChevronRight />
                   </button>
                 </div>
               )}
+
             </>
           )}
         </div>

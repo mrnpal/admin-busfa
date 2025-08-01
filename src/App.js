@@ -8,6 +8,7 @@ import UsersPage from "./pages/users/usersPage";
 import JobPage from "./pages/pekerjaan/addJobForm";
 import ProtectedRoute from "./services/ProtectedRoute"; 
 import MapsPage from "./pages/map/mapsPage";
+import GenerateDummyAlumni from "./routes/GenerateDummyAlumni";
 
 function App() {
   return (
@@ -60,6 +61,12 @@ function App() {
               <UsersPage />
             </ProtectedRoute>
           }
+        />
+
+        <Route path="/generate-dummy" 
+        element={<ProtectedRoute>
+          <GenerateDummyAlumni />
+        </ProtectedRoute>}
         />
 
         <Route
