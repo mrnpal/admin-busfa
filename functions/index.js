@@ -90,7 +90,7 @@ exports.notifyNewJob = functions.firestore
     }
   });
 
-  // --- Fungsi: Kirim Notifikasi Saat Kegiatan Baru Ditambahkan ---
+  // --- Fungsi: Kirim Notifikasi Saat Informasi Kegiatan Baru Ditambahkan ---
 exports.notifyNewActivity = functions.firestore
   .document("kegiatan/{activityId}")
   .onCreate(async (snap, context) => {
