@@ -24,6 +24,7 @@ import {
 import "./alumniPage.css";
 
 const AlumniPage = () => {
+  // State untuk data alumni dan form
   const [alumni, setAlumni] = useState([]);
   const [newAlumni, setNewAlumni] = useState({
     name: "",
@@ -33,8 +34,6 @@ const AlumniPage = () => {
     parentName: "",
     dateEntry:"",
     education: "",
-
-  
   });
   const [editingAlumni, setEditingAlumni] = useState(null);
   const [deletingAlumni, setDeletingAlumni] = useState(null);
@@ -47,25 +46,24 @@ const AlumniPage = () => {
   const itemsPerPage = 10;
   const navigate = useNavigate();
 
+  // Ambil data alumni saat komponen mount
   useEffect(() => {
     fetchAlumni();
   }, []);
 
+  // Ambil data alumni dari Firestore dan urutkan berdasarkan waktu dibuat
   const fetchAlumni = async () => {
     setIsLoading(true);
     try {
       const alumniSnapshot = await getDocs(collection(db, "alumni"));
-    
       const alumniData = alumniSnapshot.docs.map(doc => ({
         id: doc.id,
         collectionName: "alumni",
         verified: false,
         ...doc.data()
       }));
-  
       // Urutkan descending berdasarkan createdAt
       alumniData.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
       setAlumni([...alumniData]);
       setCurrentPage(1);
     } catch (err) {
@@ -76,12 +74,12 @@ const AlumniPage = () => {
     }
   };
 
+  // Filter dan paginasi data alumni sesuai pencarian
   const getCurrentPageData = () => {
-    //pencarian alumni berdasarkan nama, nomor induk, nama orang tua, dan alamat
+    // Pencarian alumni berdasarkan beberapa field
     const filteredData = alumni.filter((a) =>
       `${a.name} ${a.indukNumber} ${a.parentName} ${a.address}`.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return {
@@ -93,6 +91,7 @@ const AlumniPage = () => {
 
   const { data: currentAlumni, totalPages } = getCurrentPageData();
 
+  // Tambah alumni baru ke Firestore, validasi nomor induk unik
   const handleAddAlumni = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -115,7 +114,6 @@ const AlumniPage = () => {
         id: id,
         createdAt: Date.now(),
       });
-      
       setNewAlumni({ name: "", indukNumber: "", parentName: "", address: "", dateEntry: "", education: "", birthPlaceDate: "" });
       await fetchAlumni();
     } catch (err) {
@@ -126,6 +124,7 @@ const AlumniPage = () => {
     }
   };
 
+  // Update data alumni di Firestore
   const handleUpdateAlumni = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -136,7 +135,6 @@ const AlumniPage = () => {
         id,
         collectionName
       });
-      
       setEditingAlumni(null);
       await fetchAlumni();
     } catch (err) {
@@ -147,6 +145,7 @@ const AlumniPage = () => {
     }
   };
 
+  // Hapus satu alumni dari Firestore
   const confirmDelete = async () => {
     setIsLoading(true);
     try {
@@ -165,19 +164,22 @@ const AlumniPage = () => {
     }
   };
 
+  // Update state saat mengedit alumni
   const handleEditChange = (e) => {
     setEditingAlumni((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  // Pindah halaman pada paginasi
   const goToPage = (page) => {
     setCurrentPage(page);
   };
 
+  // Toggle sidebar collapse
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
-  
+  // Render UI
   return (
     <div className={`dashboard-container ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
       {/* Sidebar */}
