@@ -153,8 +153,8 @@ const UsersPage = () => {
                 </div>
                 <div className="modal-body">
                   <p><strong>Nama:</strong> {selectedUser.name}</p>
-                  <p><strong>Nomor Induk:</strong>{selectedUser.indukNumber}</p>
-                  <p><strong>Email:</strong> {selectedUser.email}</p>
+                  <p><strong>Nomor Induk:</strong>{selectedUser.indukNumber || '-'}</p>
+                  <p><strong>Email:</strong> {selectedUser.email || '-'}</p>
                   <p><strong>Tempat, Tanggal Lahir:</strong> {selectedUser.birthPlaceDate || '-'}</p>
                   <p><strong>Pendidikan:</strong> {selectedUser.education || '-'}</p>
                   <p><strong>Orang Tua:</strong> {selectedUser.parentName || '-'}</p>
