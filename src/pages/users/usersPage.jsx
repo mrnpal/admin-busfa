@@ -211,15 +211,15 @@ const UsersPage = () => {
                     <tr key={a.id} onClick={() => handleRowClick(a)} style={{ cursor: "pointer" }}>
                       <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                       <td className="alumni-name">{a.name}</td>
-                      <td>{a.indukNumber}</td>
-                      <td>{a.email}</td>
+                      <td>{a.indukNumber || '-'}</td>
+                      <td>{a.email || '-'}</td>
                       <td>{a.birthPlaceDate || '-'}</td>
                       <td>{a.education || '-'}</td>
                       <td>{a.parentName || '-'}</td>
                       <td>{a.phone || '-'}</td>
                       <td>{a.job || '-'}</td>
                       <td>{a.dateEntry || '-'}</td>
-                      <td>{a.graduationYear}</td>
+                      <td>{a.graduationYear || '-'}</td>
                       <td className="alamat-col">{a.address || '-'}</td>
                       <td>
                         <button
